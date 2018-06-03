@@ -1,0 +1,15 @@
+/node_modules/
+/dist/
+.idea/
+**/*.js
+!index.js
+**/*.map
+/src/routes.ts
+/data/db
+
+/src/services/*.ts
+/src/models/*.ts
+/src/io/*.ts
+/src/interfaces/*.ts
+/src/dao/*.ts
+/src/controllers/*.ts

@@ -1,0 +1,42 @@
+{
+  "name": "koteez-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run tsoa-all && tsc --sourceMap false",
+    "watch": "tsc -w",
+    "load": "artillery run loadtest.yml -o dist/loadtest.result -q",
+    "tsoa-all": "npm run swagger && npm run routes",
+    "swagger": "tsoa swagger",
+    "routes": "tsoa routes",
+    "start": "npm run build && node index.js",
+    "dev": "nodemon --watch dist index.js",
+    "debug": "npm run watch && nodemon --watch dist --debug --debug-brk=5858 index.js",
+    "lint": "tslint --project tsconfig.json --config tslint.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "good": "7.3.0",
+    "good-console": "^7.1.0",
+    "good-squeeze": "5.1.0",
+    "hapi": "16.6.3",
+    "inversify": "4.5.2",
+    "inversify-binding-decorators": "3.0.0",
+    "jsonwebtoken": "8.2.2",
+    "mongoose": "4.13.7",
+    "reflect-metadata": "0.1.12",
+    "tsoa": "2.1.5",
+    "typescript-logging": "0.5.0"
+  },
+  "devDependencies": {
+    "@types/hapi": "16.1.6",
+    "@types/mongoose": "4.7.30",
+    "artillery": "1.6.0-18",
+    "nodemon": "1.17.5",
+    "tslint": "5.8.0",
+    "typescript": "2.6.2"
+  }
+}
