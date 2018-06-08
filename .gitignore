@@ -5,6 +5,7 @@
 !index.js
 **/*.map
 /src/routes.ts
+/src/iocRegistration.ts
 /data/db
 /report/
 /e2e/*.stp
