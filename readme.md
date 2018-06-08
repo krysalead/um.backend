@@ -101,7 +101,7 @@ interface Ingredient{
 }
 ```
 
-#### DAO
+### DAO
 
 This is where you will access your database. Each file should define a single document in the database
 
@@ -109,7 +109,7 @@ This is where you will access your database. Each file should define a single do
 
 ```
 import { Schema, Document, model } from 'mongoose';
-import { Traceable,makeTraceable } from '../interfaces/Traceable';
+import { Traceable,makeTraceable } from '../core/interfaces/Traceable';
 ```
 
 - second step, define your object in TypeScript way, to be manipulated by the service, it must reflect the database object
@@ -155,7 +155,7 @@ export const DAOPizza = model<DAODocumentPizza>(
 );
 ```
 
-#### Interfaces
+### Interfaces
 
 This is optional, depending if you like working with interfaces or not.
 
@@ -189,7 +189,9 @@ export class OrderService {
 }
 ```
 
-#### IO
+Make a reference (import) to this class into the ./iocRegistration.ts
+
+### IO
 
 This folder gather all the interfaces of object that will be exchanged with the UI. It extends the IServiceStatus which will expose a status and a message (status 0 means no issue)
 
@@ -211,6 +213,48 @@ I used data has a data holder but you can use any name you want.
 ### Controllers
 
 This folder is the frontline of your application, receiving the request from the UI. It will also expose and API via annotation and swagger.
+
+```
+import { factory } from '../core/services/LoggingService';
+import {
+  OrderRequest,
+  OrderResponse
+} from '../io/Order';
+import { SwimController } from '../core/controllers/SwimController';
+
+const logger = factory.getLogger('controller.Order');
+
+@Route('order')
+@provide(PizzaController)
+export class InvitationController extends SwimController {
+  constructor(
+    @inject(TYPES.OrderService)
+    private orderService: OrderService
+  ) {
+    super(logger);
+  }
+
+  @Post('order')
+  @Example<OrderResponse>({
+    status: 0,
+    message: ''
+  })
+  public async orderPizza(
+    @Body() request: OrderRequest
+  ): Promise<OrderResponse> {
+    logger.info('Start orderPizza');
+    let status = null;
+    try {
+      status = await this.orderService.order(request.pizzas);
+    } catch (e) {
+      status = this.generateServiceFailureStatus(e);
+    }
+    logger.info('End orderPizza');
+    return status;
+  }
+```
+
+Make a reference (import) to this class into the ./iocRegistration.ts
 
 ## Client
 

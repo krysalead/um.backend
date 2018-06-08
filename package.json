@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npm run tsoa-all && tsc --sourceMap false",
     "watch": "tsc -w",
-    "load": "artillery run loadtest.yml -o dist/loadtest.result -q",
+    "load": "artillery run e2e/loadtest.yml -o dist/loadtest.result -q",
+    "e2e": "restshooter e2e/dev.cfg",
     "tsoa-all": "npm run swagger && npm run routes",
     "swagger": "tsoa swagger",
     "routes": "tsoa routes",
@@ -38,6 +39,7 @@
     "@types/mongoose": "4.7.30",
     "artillery": "1.6.0-18",
     "nodemon": "1.17.5",
+    "restshooter": "^1.9.1",
     "tslint": "5.8.0",
     "typescript": "2.6.2"
   }

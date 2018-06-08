@@ -6,7 +6,10 @@
 **/*.map
 /src/routes.ts
 /data/db
-
+/report/
+/e2e/*.stp
+/e2e/*.scn
+/e2e/*.cfg
 /src/services/*.ts
 /src/models/*.ts
 /src/io/*.ts

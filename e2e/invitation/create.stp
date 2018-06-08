@@ -1,0 +1,10 @@
+{
+	"name":"CreateInvitation",
+	"url":"/invitation/federation",
+	"method":"POST",
+	"data":"{\"emails\":[\"test@test.com\"],\"federationId\":\"${CreateFederation.data._id}\"}",
+	"checks":[{
+		"path":"message",
+		"test":"exist|"
+	}]
+}

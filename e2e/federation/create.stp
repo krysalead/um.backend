@@ -1,0 +1,13 @@
+{
+	"name":"CreateFederation",
+	"url":"/federation/create",
+	"method":"POST",
+	"data":"{\"name\":\"e2etest\",\"logo\":\"e2elogourl\",\"hasCustomization\":false,\"quota\":10}",
+	"checks":[{
+		"path":"data.id",
+		"test":"exist"
+	},{
+		"path":"data.name",
+		"test":"e2etest"
+	}]
+}
