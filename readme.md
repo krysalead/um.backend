@@ -50,6 +50,8 @@ git remote add store URL_OF_YOUR_REPO
 - Swagger annotation [https://github.com/lukeautry/tsoa](Tsoa)
 - ORM [http://mongoosejs.com/docs/guide.html](Mongoose)
 - Server [https://hapijs.com/api/16.6.3](Hapi.js)
+- Database Mock [https://github.com/Mockgoose/Mockgoose](Mockgoose)
+- IOC [https://github.com/inversify/InversifyJS](InversifyJs)
 
 ## What you get
 
@@ -68,6 +70,7 @@ There is already setup 2 kind of category **services** and **controllers**, pref
 ### Database Service
 
 So far we support only MongoDb, this service will start a connection to the database, see the DAO section to understand what you still need to do.
+You can mock the database using mockgoose just switching mockDb to true in the configuration
 
 ## Config service
 
@@ -77,6 +80,14 @@ Config service will give access to a JSON that hold your config, it can be find 
 - add your configuration sturcture as you like
 - open the production.ts
 - add your default value and use an en variable to get something from the server, never leave production information in this file.
+
+Switching the configuration is simple as setting ENV environement variable
+
+```
+ENV=test npm run dev
+```
+
+Will start the dev environement using the test configuration
 
 ## Where to code
 
@@ -259,3 +270,13 @@ Make a reference (import) to this class into the ./iocRegistration.ts
 ## Client
 
 This library doesn't aim to explain how to generate a client, there is many technology and way of doing it. I strongly recommend to use generators [https://github.com/OpenAPITools/openapi-generator](swagger codegen / OpenAPI Generator). You can always test with [https://www.getpostman.com/](Postman)
+
+## E2e testing
+
+End to end testing is the way to ensure your flows are working properly. It can be done easily on UI using selenium, here we will use restShooter library that allows to run a scenario and propagate state of the previous step into the next. It allows also to check content of the answers to verify that we have the behavior we coded.
+
+### Configuration
+
+For the server it is strongly recommended to run on test environement with database mocked.
+Config of restShooter
+More information read the doc

@@ -1,4 +1,5 @@
 export const CORE_TYPES = {
   DatabaseService: 'DatabaseService',
-  ConfigService: 'ConfigService'
+  ConfigService: 'ConfigService',
+  AuthService: 'AuthService'
 };

@@ -6,12 +6,12 @@ export const config: Config = {
     url: process.env.DATABASE_URL || 'mongodb://localhost:27017/dbTest'
   },
   server: {
-    port: +process.env.PORT || 4000,
+    port: 4000,
     name: process.env.NAME || 'main'
   },
   logging: {
-    services: process.env.LOGGING_SERVICES || 'Info',
-    controllers: process.env.LOGGING_CONTROLLERS || 'Info',
-    general: process.env.LOGGING_GENERAL || 'Info'
+    services: process.env.LOGGING_SERVICES || 'Debug',
+    controllers: process.env.LOGGING_CONTROLLERS || 'Debug',
+    general: process.env.LOGGING_GENERAL || 'Debug'
   }
 };

@@ -1,1 +1,3 @@
-export interface CoreConfig {}
+export interface CoreConfig {
+  mockDb: boolean;
+}

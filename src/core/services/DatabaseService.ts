@@ -16,6 +16,19 @@ export class DatabaseService implements IDatabaseService {
   ) {
     const configuration = configurationService.getConfig();
     (<any>mongoose).Promise = Promise;
+    if (configuration.mockDb) {
+      var Mockgoose = require('mockgoose').Mockgoose;
+      var mockgoose = new Mockgoose(mongoose);
+      var self = this;
+      mockgoose.prepareStorage().then(function() {
+        self.init(configuration);
+      });
+    } else {
+      this.init(configuration);
+    }
+  }
+
+  init(configuration) {
     mongoose.connect(
       configuration.database.url,
       { useMongoClient: true },
