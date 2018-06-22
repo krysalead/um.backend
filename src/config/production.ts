@@ -13,5 +13,11 @@ export const config: Config = {
     services: process.env.LOGGING_SERVICES || 'Info',
     controllers: process.env.LOGGING_CONTROLLERS || 'Info',
     general: process.env.LOGGING_GENERAL || 'Info'
+  },
+  auth: {
+    JWTSecret: process.env.JWT_SECRET
+  },
+  data: {
+    file: null
   }
 };

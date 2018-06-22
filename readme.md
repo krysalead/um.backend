@@ -267,6 +267,35 @@ export class InvitationController extends SwimController {
 
 Make a reference (import) to this class into the ./iocRegistration.ts
 
+## Authentication
+
+This server comes with the normal login/password validation. Then it uses the JWT approach for the rest of the calls
+
+To generate a strong secret please run this command and use the output as secret.
+
+```
+node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
+```
+
+Put is in the configuration file under
+
+```
+auth: {
+    JWTSecret:...
+}
+```
+
+You will need to provide an implementation of IAppUserService to the IOC so that you will be able to hook on all the calls done by the authentication service
+
+They mainly allow to do some additional calls to database or Middleware
+
+- beforeLogin(userAuth: UserAuth): Promise<any>;
+- afterLogin(userAuth: UserAuth): Promise<any>;
+- beforeRegister(userAuth: UserAuth): Promise<any>;
+- afterRegister(userAuth: UserAuth): Promise<any>;
+  This one is special it will return what you expect to encode in the token
+- getTokenPayload(userAuth: UserAuth): Promise<any>;
+
 ## Client
 
 This library doesn't aim to explain how to generate a client, there is many technology and way of doing it. I strongly recommend to use generators [https://github.com/OpenAPITools/openapi-generator](swagger codegen / OpenAPI Generator). You can always test with [https://www.getpostman.com/](Postman)
@@ -280,3 +309,29 @@ End to end testing is the way to ensure your flows are working properly. It can 
 For the server it is strongly recommended to run on test environement with database mocked.
 Config of restShooter
 More information read the doc
+
+### Data
+
+Sometimes your server needs to have a minimum amount of data to be loaded before doing some actions. In order to achieve that you have a configuration section
+
+```
+  data: {
+    file: './e2e/data/test.json'
+  }
+```
+
+This file will be read at server launch time and inject data in database.
+Here is an example, the top level key must be the name of the DAO you want to use and it is an array where each object must follow the structure of your DAO.
+
+```
+{
+  "userAuthDAO": [{
+    "login": "admin@test.com",
+    "password": "adminpassword|password",
+    "channel": "EmailPass",
+    "role": ["Admin"]
+  }]
+}
+```
+
+/!\ This file must not be stored on a public repository if you put some real data inside.

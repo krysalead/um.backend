@@ -5,10 +5,14 @@
     "host": "localhost:4000",
     "basePath": "/v1",
     "securityDefinitions": {
-      "frontoffice": {
+      "jwt": {
         "type": "apiKey",
         "name": "jwt_token",
-        "in": "header"
+        "in": "header",
+        "scopes": {
+          "admin": "modify things",
+          "user": "read things"
+        }
       }
     }
   },
@@ -17,7 +21,8 @@
     "entryFile": "./src/hapi-server.ts",
     "routesDir": "./src",
     "middleware": "hapi",
-    "authenticationModule": "./src/authentication.ts",
+    "middlewareTemplate": "custom-hpi-template.handlebars",
+    "authenticationModule": "./src/core/hapiAuthentication.ts",
     "iocModule": "./src/ioc"
   },
   "ignore": [

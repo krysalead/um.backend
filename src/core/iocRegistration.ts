@@ -2,3 +2,7 @@
 /* service */
 import './services/ConfigService';
 import './services/DatabaseService';
+import './services/EmailPasswordAuthService';
+import './services/SecurityService';
+/* controller */
+import './controllers/AuthController';
