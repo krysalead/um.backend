@@ -1,6 +1,7 @@
-# Rest-Server
+# Swim-Server
 
-This repository is the root of the rest server, it provide a squeleton of a Rest server in Node using Swagger, Hapi, Mongoose, Typescript, JWT, MongoDB, inversifyJS. Fork it and make your change following the below instruction and rebase when there is a new version so you will get the update.
+Swim server is a rest server made easy and clean, it provide a squeleton of a REST server in Node using Swagger, Hapi, Mongoose, Typescript, JWT, MongoDB, inversifyJS. It is highly customizable and flexible. Fork it and make your change following the below instruction and rebase when there is a new version so you will get the update.
+You can change it as you want and if you wish share what you did with others.
 
 ## Prerequisit
 
