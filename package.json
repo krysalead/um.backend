@@ -8,6 +8,7 @@
     "watch": "tsc -w",
     "load": "artillery run e2e/loadtest.yml -o dist/loadtest.result -q",
     "e2e": "restshooter e2e/dev.cfg",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "tsoa-all": "npm run swagger && npm run routes",
     "swagger": "tsoa swagger",
     "routes": "tsoa routes",
@@ -37,13 +38,18 @@
     "typescript-logging": "0.5.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.4",
     "@types/hapi": "16.1.6",
+    "@types/mocha": "^5.2.3",
     "@types/mongoose": "4.7.30",
     "@types/password-hash-and-salt": "^0.1.0",
     "artillery": "1.6.0-18",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
     "mockgoose": "^7.3.5",
     "nodemon": "1.17.5",
     "restshooter": "^1.9.1",
+    "ts-node": "^6.1.2",
     "tslint": "5.8.0",
     "typescript": "2.6.2"
   }

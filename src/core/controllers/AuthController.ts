@@ -44,7 +44,10 @@ export class AuthController extends SwimController {
         logger.info('Login success for ' + loginServiceOutput);
         //User is validated we can generate the token
         token = this.securityService.generateToken(
-          await this.appUserService.getTokenPayload(loginServiceOutput.userAuth)
+          await this.appUserService.getTokenPayload(
+            loginServiceOutput.userAuth
+          ),
+          loginServiceOutput.userAuth.role
         );
       }
       //Do not send this to the client

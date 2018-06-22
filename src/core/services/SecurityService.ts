@@ -5,15 +5,18 @@ import { IConfigService } from '../../interfaces/services';
 import { UserAuth } from '../interfaces/UserAuth';
 
 import { factory } from '../services/LoggingService';
-const logger = factory.getLogger('service.EmailPasswordAuth');
+const logger = factory.getLogger('service.Security');
 
 @provideSingleton(CORE_TYPES.SecurityService)
 export class SecurityService {
   constructor(
     @inject(CORE_TYPES.ConfigService) private configService: IConfigService
   ) {}
-  public generateToken(user: any): string {
-    return JWT.sign(user, this.configService.getConfig().auth.JWTSecret);
+  public generateToken(payload: any, scopes: string[]): string {
+    return JWT.sign(
+      { scopes: scopes, payload: payload },
+      this.configService.getConfig().auth.JWTSecret
+    );
   }
 
   public verify(token: string, scopes: string[]): Promise<any> {
@@ -26,11 +29,12 @@ export class SecurityService {
           logger.error('Error during token verification', err);
           reject(err);
         } else {
+          console.log('decoded', decoded);
           // Check if JWT contains all required scopes
           for (let scope of scopes) {
             if (!decoded.scopes.includes(scope)) {
-              logger.warn('JWT does not contain required scope.', err);
-              reject(new Error('JWT does not contain required scope.'));
+              logger.warn('JWT does not contain required scope.');
+              reject('You are not allowed to access this resource');
             }
           }
           resolve(decoded);

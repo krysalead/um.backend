@@ -26,14 +26,14 @@ export function hapiAuthentication(
         const securityService: SecurityService = iocContainer.get(
           CORE_TYPES.SecurityService
         );
-        securityService.verify(token, scopes).then(
+        return securityService.verify(token, scopes).then(
           (user: any) => {
             logger.info(user);
             resolve(user);
           },
           reason => {
-            logger.warn(reason);
-            reject(reason);
+            logger.warn('Fail to autorised: ' + reason);
+            reject(Boom.unauthorized(reason));
           }
         );
       }

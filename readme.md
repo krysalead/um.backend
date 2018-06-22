@@ -195,12 +195,14 @@ const logger = factory.getLogger('service.Pizza');
 export class OrderService {
   /*Place an order in database and return the price*/
   public async order(pizza:Pizza[]): Promise<number> {
-    throw new Error('Method not implemented.');
+    throw Boom.badRequest('Not implemented yet');
   }
 }
 ```
 
 Make a reference (import) to this class into the ./iocRegistration.ts
+
+In order to manage errors you can use [https://github.com/hapijs/boom#overview](boom),
 
 ### IO
 
@@ -293,22 +295,115 @@ They mainly allow to do some additional calls to database or Middleware
 - afterLogin(userAuth: UserAuth): Promise<any>;
 - beforeRegister(userAuth: UserAuth): Promise<any>;
 - afterRegister(userAuth: UserAuth): Promise<any>;
-  This one is special it will return what you expect to encode in the token
+  This one is special it will return what you expect to encode in the token but it will be wrapped with other information
 - getTokenPayload(userAuth: UserAuth): Promise<any>;
 
 ## Client
 
 This library doesn't aim to explain how to generate a client, there is many technology and way of doing it. I strongly recommend to use generators [https://github.com/OpenAPITools/openapi-generator](swagger codegen / OpenAPI Generator). You can always test with [https://www.getpostman.com/](Postman)
 
+## Unit testing
+
+Obviously you can write unit test and it is highly recommended. So each test will have the same name as the service/controller you want to test (It is just a convention nothing mandatory). It should contains the ~~spec~~ keyword to be run by the runner. We use mocha and chai to do unit tests, they are pre-installed once you do the npm install.
+
+```
+import { hello } from './hello-world';
+import { expect } from 'chai';
+import 'mocha';
+
+describe('Hello function', () => {
+
+  it('should return hello world', () => {
+    const result = hello();
+    expect(result).to.equal('Hello world!');
+  });
+
+});
+```
+
+Read more about testing on [http://www.chaijs.com/](chai) web site
+
 ## E2e testing
 
 End to end testing is the way to ensure your flows are working properly. It can be done easily on UI using selenium, here we will use restShooter library that allows to run a scenario and propagate state of the previous step into the next. It allows also to check content of the answers to verify that we have the behavior we coded.
 
+```
+npm run e2e
+```
+
 ### Configuration
 
 For the server it is strongly recommended to run on test environement with database mocked.
-Config of restShooter
-More information read the doc
+Open dev.cfg (you create more and change your package.json to have different runner for different campaign)
+
+```
+{
+  "server": "localhost",
+  "port": 4000,
+  "baseUrl": "/v1",
+  "protocol": "http",
+  "scenario": [
+    "/orderPizza.scn"
+  ],
+  "content": "JSON",
+  "report": "dist/e2e_report.log",
+  "debug": false,
+  "getSession":function(response,data,stepConfig){
+    return data.token;
+  },
+	"setSession":function(requestOptions,stepConfig,previousSession){
+    requestOptions.headers['x-access-token']=previousSession;
+  }
+}
+```
+
+### Test description
+
+Very self explainatory keys in this JSON.
+You can run numerous scenario, they will run one by one
+
+If we have a deeper look at the scenario (orderPizza.scn)
+
+```
+{
+	"name":"CreateFederation",
+	"steps":[
+    "user/login.stp",
+    "pizza/order.stp"
+	]
+}
+```
+
+The name is used for reporting and output.
+the steps are either files or json that describe what to do.
+
+```
+{
+	"name":"login",
+	"url":"/auth/login",
+	"method":"POST",
+	"data":"{\"login\":\"user@test.com\",\"password\":\"userpassword\"}",
+	"checks":[{
+		"path":"token",
+		"test":"exist"
+	}]
+}
+```
+
+```
+{
+	"name":"order",
+	"url":"/pizza/order",
+	"method":"POST",
+	"data":"{\"pizzas\":[{\"name\",\"Hawaiian\"}]}",
+	"checks":[{
+		"path":"data",
+		"test":"exist"
+	}]
+}
+```
+
+for more details on the checks see the documentation [https://github.com/krysalead/RestShooter](rest-shooter)
 
 ### Data
 
@@ -329,9 +424,20 @@ Here is an example, the top level key must be the name of the DAO you want to us
     "login": "admin@test.com",
     "password": "adminpassword|password",
     "channel": "EmailPass",
-    "role": ["Admin"]
+    "role": ["admin"]
   }]
 }
 ```
 
 /!\ This file must not be stored on a public repository if you put some real data inside.
+
+#Call for help
+
+Hey, this is already a good start but there is more to go. I need your help for few things.
+
+- Handle another database than MongoDb (starting a connection, mocking in test)
+- Test with express (change the code generator, create the authentication)
+- Add more login channel (Facebook, Google, instagram...)
+- Improve the rest-shooter (Checks on numbers, data to be a json not a string)
+
+Very simple to contribute, just commit and do a PR
