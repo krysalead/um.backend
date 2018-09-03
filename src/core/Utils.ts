@@ -59,7 +59,7 @@ export function safeAccess(o, path, defaultValue) {
       if (isDefined(t) && isDefined(t[m[2]])) {
         l = t[m[2]];
       } else {
-        if (angular.isFunction(defaultValue)) {
+        if (typeof defaultValue === 'function') {
           return defaultValue();
         } else {
           return defaultValue;

@@ -1,7 +1,6 @@
 import { Route, Example, Post, Body, Path } from 'tsoa';
 import { provide, inject } from '../../ioc';
 import {
-  IServiceStatus,
   IAuthService,
   IAppUserService
 } from '../interfaces/services';
@@ -71,7 +70,6 @@ export class AuthController extends SwimController {
       status: 0,
       message: ''
     };
-    let token: string;
     try {
       status = await this.authService.register(request);
     } catch (e) {

@@ -24,8 +24,8 @@ mkdir -p ./data/db/
 Open 3 terminals, one for the compilation, one for the db, one for the server
 
 - npm run watch
-- npm run dev
 - mongod --dbpath ./data/db/
+- npm run dev
 
 ### Other command
 
@@ -66,12 +66,24 @@ import { factory } from './LoggingService';
 const logger = factory.getLogger('services.DatabaseService');
 ```
 
-There is already setup 2 kind of category **services** and **controllers**, prefix your logger with one of this keyword and you will be able to change logging options for a specific level
+There is already setup 2 kinds of category **service** and **controller**, prefix your logger with one of this keyword and you will be able to change logging options for a specific level. (ie. service.Database or controller.Auth)
+
+When there is an incoming request we attached an id with a unique id which will be displayed in each log for tracability.
 
 ### Database Service
 
 So far we support only MongoDb, this service will start a connection to the database, see the DAO section to understand what you still need to do.
-You can mock the database using mockgoose just switching mockDb to true in the configuration
+You can mock the database using mockgoose just switching mockDb to true in the configuration.
+
+There is a Continus-local-storage in place in each request
+
+```
+import {set,get} from '../core/services/CLSService'
+
+set('user',currentUser);
+...
+let currentUser = get('user');
+```
 
 ## Config service
 
@@ -432,7 +444,7 @@ Here is an example, the top level key must be the name of the DAO you want to us
 
 /!\ This file must not be stored on a public repository if you put some real data inside.
 
-#Call for help
+###Call for help
 
 Hey, this is already a good start but there is more to go. I need your help for few things.
 

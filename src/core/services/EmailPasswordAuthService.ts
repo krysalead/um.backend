@@ -97,7 +97,8 @@ export class EmailPasswordAuthService implements IAuthService {
       password: document.password,
       channel: document.channel,
       role: document.role,
-      validated: document.validated
+      validated: document.validated,
+      locked:document.locked
     };
   }
 

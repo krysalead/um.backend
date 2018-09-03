@@ -15,8 +15,8 @@ export function hapiAuthentication(
 ): Promise<any> {
   if (securityName === 'jwt') {
     const token =
-      request.payload.token ||
-      request.query.token ||
+      (request.payload && request.payload['token']) ||
+      (request.query && request.query['token']) ||
       request.headers['x-access-token'];
 
     return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export function hapiAuthentication(
         );
         return securityService.verify(token, scopes).then(
           (user: any) => {
-            logger.info(user);
+            logger.info('Authentication successful:' + user.id);
             resolve(user);
           },
           reason => {

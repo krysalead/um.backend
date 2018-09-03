@@ -29,7 +29,6 @@ export class SecurityService {
           logger.error('Error during token verification', err);
           reject(err);
         } else {
-          console.log('decoded', decoded);
           // Check if JWT contains all required scopes
           for (let scope of scopes) {
             if (!decoded.scopes.includes(scope)) {
@@ -37,7 +36,7 @@ export class SecurityService {
               reject('You are not allowed to access this resource');
             }
           }
-          resolve(decoded);
+          resolve(decoded.payload);
         }
       });
     });

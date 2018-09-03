@@ -1,4 +1,6 @@
 import './core/iocRegistration';
+/* Core injection configuration */
+import './core/services/MongoDBService';
 /* service */
 import './services/FederationService';
 import './services/ClubService';

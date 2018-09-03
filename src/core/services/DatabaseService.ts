@@ -1,55 +1,20 @@
 import * as mongoose from 'mongoose';
 import * as path from 'path';
 
-import { provideSingleton, inject } from '../../ioc';
+import { inject, provideSingleton } from '../../ioc';
 import { syncEach, safeAccess } from '../Utils';
 import { IConfigService, IDatabaseService } from '../interfaces/services';
 import { CORE_TYPES } from '../interfaces/coreTypes';
 const password = require('password-hash-and-salt');
 import { factory } from './LoggingService';
+import { Config } from '../../interfaces/config';
 
 const logger = factory.getLogger('services.DatabaseService');
 
-@provideSingleton(CORE_TYPES.DatabaseService)
-export class DatabaseService implements IDatabaseService {
-  constructor(
-    @inject(CORE_TYPES.ConfigService) configurationService: IConfigService
-  ) {
-    const configuration = configurationService.getConfig();
-    (<any>mongoose).Promise = Promise;
-    if (configuration.mockDb) {
-      var Mockgoose = require('mockgoose').Mockgoose;
-      var mockgoose = new Mockgoose(mongoose);
-      var self = this;
-      mockgoose.prepareStorage().then(function() {
-        self.init(configuration);
-      });
-    } else {
-      this.init(configuration);
-    }
-  }
-
-  init(configuration) {
-    mongoose.connect(
-      configuration.database.url,
-      { useMongoClient: true },
-      error => {
-        let databaseName = configuration.database.url
-          ? configuration.database.url.split('/')[3]
-          : 'Missing database';
-        if (error) {
-          logger.error(
-            `Failed to connect to database at ${databaseName}`,
-            error
-          );
-        } else {
-          logger.info(`Successfully connected to database at ${databaseName}`);
-          this.injectData(configuration);
-        }
-      }
-    );
-  }
-
+@provideSingleton(CORE_TYPES.DBService)
+export abstract class DatabaseService implements IDatabaseService {
+  constructor(configurationService: IConfigService) {}
+  abstract init(configuration: Config): void;
   async injectData(configuration) {
     const dataFile = configuration.data.file;
     if (dataFile) {
@@ -147,12 +112,6 @@ export class DatabaseService implements IDatabaseService {
           resolve(hash);
         }
       });
-    });
-  }
-
-  close() {
-    mongoose.connection.close(message => {
-      logger.info('Database connection closed with: ' + message);
     });
   }
 }

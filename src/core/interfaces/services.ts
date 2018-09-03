@@ -1,7 +1,9 @@
 import { Config } from '../../interfaces/config';
 import { UserAuth } from './UserAuth';
 
-export interface IDatabaseService {}
+export interface IDatabaseService {
+  init(config: Config);
+}
 
 export interface IConfigService {
   getConfig(): Config;

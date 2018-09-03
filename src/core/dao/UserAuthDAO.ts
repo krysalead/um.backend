@@ -14,6 +14,7 @@ export interface DAOModelUserAuth {
   channel: string;
   role: string[];
   validated: boolean;
+  locked: Date;
 }
 
 const schemaUserAuth = makeTraceable({
@@ -23,7 +24,8 @@ const schemaUserAuth = makeTraceable({
   password: String,
   channel: String,
   role: [String],
-  validated: Boolean
+  validated: Boolean,
+  locked: Date
 });
 
 ////////////////////////////////////////////////////////////////////////////////

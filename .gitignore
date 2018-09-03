@@ -7,7 +7,7 @@
 **/*.map
 /src/routes.ts
 /src/iocRegistration.ts
-/data/db
+/data
 /report/
 /e2e/**/*.stp
 /e2e/**/*.scn
