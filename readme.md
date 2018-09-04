@@ -1,7 +1,10 @@
 # Swim-Server
 
-Swim server is a rest server made easy and clean, it provide a squeleton of a REST server in Node using Swagger, Hapi, Mongoose, Typescript, JWT, MongoDB, inversifyJS. It is highly customizable and flexible. Fork it and make your change following the below instruction and rebase when there is a new version so you will get the update.
-You can change it as you want and if you wish share what you did with others.
+> Don't drawn, just swim
+
+Swim server is a rest server made easy and clean, it provides a skeleton of a REST server in Node using Swagger, Hapi, Mongoose, Typescript, JWT, MongoDB, inversifyJS. It is highly customizable and flexible. Fork it and make your changes following the below instructions and rebase when there is a new version so you will get the updates.
+You can change it as you want and if you wish share what you did with others with a pull-request.
+
 
 ## Prerequisit
 
@@ -33,7 +36,7 @@ Open 3 terminals, one for the compilation, one for the db, one for the server
 - "load": Perfform a load testing
 - "tsoa-all": Generate the swagger and the associated routes
 - "swagger": Generate the swagger only
-- "routes": Generate the routes only
+- "routes": Generate the routes to handle requests only
 - "start": run the build and start the app
 - "debug": Start the file change watch and wait for a debugger to connect
 - "lint": Lint the code
@@ -58,7 +61,7 @@ git remote add store URL_OF_YOUR_REPO
 
 ### Logging service
 
-The way to log in your code is this one, behind the scene we use the [https://github.com/mreuvers/typescript-logging](typescript-logging) library
+The way to logging in your code is this one, behind the scene we use the [https://github.com/mreuvers/typescript-logging](typescript-logging) library
 
 ```Typescript
 import { factory } from './LoggingService';
@@ -92,7 +95,7 @@ Config service will give access to a JSON that hold your config, it can be find 
 - open interfaces/config.ts
 - add your configuration sturcture as you like
 - open the production.ts
-- add your default value and use an en variable to get something from the server, never leave production information in this file.
+- add your default value and use a env variable to get something real value for each server, never leave production information in this file.
 
 Switching the configuration is simple as setting ENV environement variable
 
