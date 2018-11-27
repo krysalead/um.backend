@@ -5,7 +5,6 @@
 Swim server is a rest server made easy and clean, it provides a skeleton of a REST server in Node using Swagger, Hapi, Mongoose, Typescript, JWT, MongoDB, inversifyJS. It is highly customizable and flexible. Fork it and make your changes following the below instructions and rebase when there is a new version so you will get the updates.
 You can change it as you want and if you wish share what you did with others with a pull-request.
 
-
 ## Prerequisit
 
 - Node
@@ -115,7 +114,7 @@ Here we are defining which object our services will manipulate and exchange.
 
 - create a file called Pizza.ts
 
-```
+```TypeScript
 export interface Pizza {
   name: string;
   topings: Ingredient[];
@@ -141,7 +140,7 @@ import { Traceable,makeTraceable } from '../core/interfaces/Traceable';
 
 - second step, define your object in TypeScript way, to be manipulated by the service, it must reflect the database object
 
-```
+```TypeScript
 interface DAOModelPizza {
   // references --------------------------------------------------------------
 
@@ -155,7 +154,7 @@ interface DAOModelPizza {
 
 - third step, define the mongoose schema, it is not nice but the only way I found so far
 
-```
+```TypeScript
 const schemaPizza = makeTraceable({
   // references --------------------------------------------------------------
 
@@ -169,7 +168,7 @@ const schemaPizza = makeTraceable({
 
 - fourth step, expose an instance
 
-```
+```TypeScript
 interface DAODocumentPizza
   extends DAOModelPizza,
     Traceable,
@@ -200,7 +199,7 @@ export const TYPES = {
 
 - In services folder create a file called OrderService.ts
 
-```
+```TypeScript
 import { factory } from '../core/services/LoggingService';
 import { TYPES } from '../interfaces/types';
 import { provideSingleton } from '../ioc';
@@ -224,7 +223,7 @@ In order to manage errors you can use [https://github.com/hapijs/boom#overview](
 
 This folder gather all the interfaces of object that will be exchanged with the UI. It extends the IServiceStatus which will expose a status and a message (status 0 means no issue)
 
-```
+```TypeScript
 import Pizza from '../models/Pizza'
 import { IServiceStatus } from '../core/interfaces/services';
 
@@ -243,7 +242,7 @@ I used data has a data holder but you can use any name you want.
 
 This folder is the frontline of your application, receiving the request from the UI. It will also expose and API via annotation and swagger.
 
-```
+```TypeScript
 import { factory } from '../core/services/LoggingService';
 import {
   OrderRequest,
@@ -322,18 +321,15 @@ This library doesn't aim to explain how to generate a client, there is many tech
 
 Obviously you can write unit test and it is highly recommended. So each test will have the same name as the service/controller you want to test (It is just a convention nothing mandatory). It should contains the ~~spec~~ keyword to be run by the runner. We use mocha and chai to do unit tests, they are pre-installed once you do the npm install.
 
-```
+```javascript
 import { hello } from './hello-world';
 import { expect } from 'chai';
-import 'mocha';
 
 describe('Hello function', () => {
-
   it('should return hello world', () => {
     const result = hello();
     expect(result).to.equal('Hello world!');
   });
-
 });
 ```
 
@@ -352,7 +348,7 @@ npm run e2e
 For the server it is strongly recommended to run on test environement with database mocked.
 Open dev.cfg (you create more and change your package.json to have different runner for different campaign)
 
-```
+```JSON
 {
   "server": "localhost",
   "port": 4000,
@@ -378,11 +374,11 @@ Open dev.cfg (you create more and change your package.json to have different run
 Very self explainatory keys in this JSON.
 You can run numerous scenario, they will run one by one
 
-If we have a deeper look at the scenario (orderPizza.scn)
+If we have a deeper look at the scenario (orderPizza.scn), the runner will perform the following actions, login and order
 
-```
+```JSON
 {
-	"name":"CreateFederation",
+	"name":"OrderPizza",
 	"steps":[
     "user/login.stp",
     "pizza/order.stp"
@@ -393,7 +389,7 @@ If we have a deeper look at the scenario (orderPizza.scn)
 The name is used for reporting and output.
 the steps are either files or json that describe what to do.
 
-```
+```JSON
 {
 	"name":"login",
 	"url":"/auth/login",
@@ -406,7 +402,9 @@ the steps are either files or json that describe what to do.
 }
 ```
 
-```
+user and password can be stored in data file which can be injected in database, you can also create a register form and use replacement to share user and password.
+
+```JSON
 {
 	"name":"order",
 	"url":"/pizza/order",
@@ -423,18 +421,36 @@ for more details on the checks see the documentation [https://github.com/krysale
 
 ### Data
 
-Sometimes your server needs to have a minimum amount of data to be loaded before doing some actions. In order to achieve that you have a configuration section
+Sometimes your server needs to have a minimum amount of data to be loaded before doing some actions. In order to achieve that you have a preRun section in your e2e run config. It is a javascript function that will be called before each scenario
 
-```
-  data: {
-    file: './e2e/data/test.json'
-  }
+```javascript
+"preRun":function(scenario){
+    var pilote = require("./pilote");
+    var mergeJSON = require("merge-json") ;
+    //If you return a promise the process will be stopped until the promise is resolved and fully stopped if rejected
+    return pilote.log("################### Scenario "+scenario.name+" Started #############################").then(()=>{
+     return pilote.injectData('e2e/data/test.json');
+    }).then((data)=>{
+      if(scenario.data){
+        return pilote.injectData(scenario.data).then((extraData)=>{
+          return {testData:mergeJSON.merge(data,extraData)};
+        });
+      }else{
+        return {testData:data};
+      }
+    });
+  },
 ```
 
-This file will be read at server launch time and inject data in database.
-Here is an example, the top level key must be the name of the DAO you want to use and it is an array where each object must follow the structure of your DAO.
+e2e folder contains something called pilote which is a client with the following possible action
 
-```
+- log: this will log something in the log of the server
+- injectData: this will inject a given JSON into the database (see the data structure for the injection)
+- resetDatabase: This function will clean the database to start fresh
+
+Here is an example of JSON that can be injected. The top level key must be the name of the DAO you want to use and it is an array where each object must follow the structure of your DAO.
+
+```JSON
 {
   "userAuthDAO": [{
     "login": "admin@test.com",
@@ -446,6 +462,9 @@ Here is an example, the top level key must be the name of the DAO you want to us
 ```
 
 /!\ This file must not be stored on a public repository if you put some real data inside.
+
+- password pipe will store the password as a password in database
+- replacement work here as well you can reference a previously inserted document like \${userAuthDAO.\_id} to get the id in database
 
 ###Call for help
 
