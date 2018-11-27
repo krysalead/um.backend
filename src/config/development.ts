@@ -1,7 +1,10 @@
 import { Config } from '../interfaces/config';
 
 export const config: Config = {
-  mockDb: false,
+  mockDb: true,
+  remote: {
+    enabled: true
+  },
   database: {
     url: process.env.DATABASE_URL || 'mongodb://localhost:27017/dbTest'
   },

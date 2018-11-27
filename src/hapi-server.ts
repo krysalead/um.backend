@@ -7,7 +7,8 @@ import { CORE_TYPES } from './core/interfaces/coreTypes';
 import { iocContainer } from './ioc';
 import {v1 as uuidv1} from 'uuid';
 import {set,middleware} from './core/services/CLSService';
-const logger = factory.getLogger('Server');
+import {remoteConnector} from './core/services/RemoteConnectorService';
+const logger = factory.getLogger('main.Server');
 const server = new Hapi.Server({});
 
 /**
@@ -38,6 +39,10 @@ const StartService = async () => {
 
 const init = async () => {
   let config: IConfigService = iocContainer.get(CORE_TYPES.ConfigService);
+  //We start the remote server if needed
+  if(config.getConfig().remote.enabled){
+    remoteConnector.start();
+  }
   server.connection({
     port: config.getConfig().server.port,
     labels: config.getConfig().server.name

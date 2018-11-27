@@ -10,6 +10,7 @@ import { factory } from './LoggingService';
 import { DatabaseService } from './DatabaseService';
 
 const logger = factory.getLogger('services.DatabaseService');
+let mockgoose;
 
 @provideSingleton(CORE_TYPES.DatabaseService)
 export class MongoDBService extends DatabaseService
@@ -19,17 +20,23 @@ export class MongoDBService extends DatabaseService
   ) {
     super(configurationService);
     const configuration = configurationService.getConfig();
-    (<any>mongoose).Promise = Promise;
     if (configuration.mockDb) {
-      var Mockgoose = require('mockgoose').Mockgoose;
-      var mockgoose = new Mockgoose(mongoose);
-      var self = this;
+      let Mockgoose = require('mockgoose').Mockgoose;
+      mockgoose = new Mockgoose(mongoose);
       mockgoose.prepareStorage().then(() => {
         this.init(configuration);
       });
     } else {
       this.init(configuration);
     }
+  }
+
+  reset() {
+    if (mockgoose) {
+      return mockgoose.helper.reset();
+    }
+    // We can't do it
+    return Promise.reject("Can't reset non-mocked database");
   }
 
   init(configuration) {
@@ -47,7 +54,6 @@ export class MongoDBService extends DatabaseService
           );
         } else {
           logger.info(`Successfully connected to database at ${databaseName}`);
-          this.injectData(configuration);
         }
       }
     );

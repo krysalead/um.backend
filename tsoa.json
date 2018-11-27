@@ -10,8 +10,7 @@
         "name": "jwt_token",
         "in": "header",
         "scopes": {
-          "admin": "modify things",
-          "user": "read things"
+
         }
       }
     }

@@ -12,20 +12,36 @@ export interface DAOModelUserAuth {
   login: string;
   password: string;
   channel: string;
-  role: string[];
+  roles: string[];
   validated: boolean;
   locked: Date;
+  documentToObject: Function;
 }
 
-const schemaUserAuth = makeTraceable({
-  // references --------------------------------------------------------------
-  // properties --------------------------------------------------------------
-  login: String,
-  password: String,
-  channel: String,
-  role: [String],
-  validated: Boolean,
-  locked: Date
+const schemaUserAuth = new Schema(
+  makeTraceable({
+    // references --------------------------------------------------------------
+    // properties --------------------------------------------------------------
+    login: String,
+    password: String,
+    channel: String,
+    roles: [String],
+    validated: Boolean,
+    locked: Date
+  })
+);
+
+/*tslint:disable:no-invalid-this*/
+schemaUserAuth.method('documentToObject', function() {
+  return {
+    id: this._id,
+    login: this.login,
+    password: this.password,
+    roles: this.roles,
+    channel: this.channel,
+    validated: this.validated,
+    locked: this.locked
+  };
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,5 +56,5 @@ export interface DAODocumentUserAuth
 // tslint:disable-next-line:variable-name
 export const DAOUserAuth = model<DAODocumentUserAuth>(
   'UserAuth',
-  new Schema(schemaUserAuth)
+  schemaUserAuth
 );

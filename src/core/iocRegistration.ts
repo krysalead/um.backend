@@ -1,7 +1,6 @@
-/**CORE TODO Move it in a different file */
 /* service */
 import './services/ConfigService';
 import './services/EmailPasswordAuthService';
-import './services/SecurityService';
+import './services/SwimSecurityService';
 /* controller */
 import './controllers/AuthController';

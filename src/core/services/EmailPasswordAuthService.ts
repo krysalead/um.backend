@@ -7,7 +7,7 @@ import {
   ILoginServiceOutput
 } from '../interfaces/services';
 import { CORE_TYPES } from '../interfaces/coreTypes';
-import { UserAuth } from '../interfaces/UserAuth';
+import { UserAuth, UserRegistration } from '../interfaces/UserAuth';
 const password = require('password-hash-and-salt');
 import { DAODocumentUserAuth, DAOUserAuth } from '../dao/UserAuthDAO';
 import { factory } from '../services/LoggingService';
@@ -22,22 +22,24 @@ export class EmailPasswordAuthService implements IAuthService {
     @inject(CORE_TYPES.AppUserService) private appUserService: IAppUserService
   ) {}
 
-  async register(userAuth: UserAuth): Promise<IServiceStatus> {
+  async register(userRegistration: UserRegistration): Promise<IServiceStatus> {
     logger.info('Start register');
     let userAuthDAO: DAODocumentUserAuth = await DAOUserAuth.findOne({
-      login: userAuth.login
+      login: userRegistration.login
     });
     let status = {
       status: 0,
       message: ''
     };
     if (!userAuthDAO) {
-      userAuth.password = await this.hash(userAuth.password);
-      if (userAuth.password) {
-        this.appUserService.beforeRegister(userAuth);
-        let userAuthDAO = new DAOUserAuth(userAuth);
+      userRegistration.password = await this.hash(userRegistration.password);
+      if (userRegistration.password) {
+        this.appUserService.beforeRegister(userRegistration);
+        userAuthDAO = new DAOUserAuth(userRegistration);
         await userAuthDAO.save();
-        this.appUserService.afterRegister(this.documentToObject(userAuthDAO));
+        this.appUserService.afterRegister(
+          this.documentToUserRegistrationObject(userAuthDAO, userRegistration)
+        );
         logger.info('User created');
       } else {
         logger.error('Failed to hash password');
@@ -68,18 +70,20 @@ export class EmailPasswordAuthService implements IAuthService {
     });
     await this.appUserService.beforeLogin(userAuth);
     let status;
-    let valid =
-      userAuthDAO &&
-      (await this.validate(userAuth.password, userAuthDAO.password));
-    if (valid) {
-      logger.info('Login success');
-      await this.appUserService.afterLogin(userAuth);
-      status = {
-        status: 0,
-        message: '',
-        userAuth: this.documentToObject(userAuthDAO)
-      };
-    } else {
+    let valid = false;
+    if (userAuthDAO) {
+      valid = await this.validate(userAuth.password, userAuthDAO.password);
+      if (valid) {
+        logger.info('Login success');
+        await this.appUserService.onLoginSuccess(userAuth);
+        status = {
+          status: 0,
+          message: '',
+          userAuth: this.documentToUserAuthObject(userAuthDAO)
+        };
+      }
+    }
+    if (!valid) {
       logger.info('Login failure: Invalid user or password');
       status = {
         status: -1,
@@ -90,15 +94,25 @@ export class EmailPasswordAuthService implements IAuthService {
     return status;
   }
 
-  private documentToObject(document: DAODocumentUserAuth): UserAuth {
+  private documentToUserAuthObject(document: DAODocumentUserAuth): UserAuth {
     return {
       id: document._id,
       login: document.login,
       password: document.password,
       channel: document.channel,
-      role: document.role,
+      roles: document.roles,
       validated: document.validated,
-      locked:document.locked
+      locked: document.locked
+    };
+  }
+  private documentToUserRegistrationObject(
+    document: DAODocumentUserAuth,
+    userRegistration: UserRegistration
+  ): UserRegistration {
+    return {
+      ...this.documentToUserAuthObject(document),
+      firstName: userRegistration.firstName,
+      lastName: userRegistration.lastName
     };
   }
 
@@ -120,13 +134,12 @@ export class EmailPasswordAuthService implements IAuthService {
       password(userPassword).verifyAgainst(hash, function(error, verified) {
         if (error) {
           logger.error(error);
-          reject(false);
+          resolve(false);
         }
         if (!verified) {
-          reject(false);
-        } else {
-          resolve(true);
+          logger.error('Validation failed');
         }
+        resolve(verified);
       });
     });
   }

@@ -31,9 +31,9 @@ function namespace() {
  * @param ctx
  * @returns {*|void}
  */
-export function context(ctx) {
+export function context(ctx?) {
     if (!ctx) {
-        var obj = Object.assign(process.namespaces[nsid].active, {});
+        var obj = Object.assign(process['namespaces'][nsid].active, {});
         delete obj['_ns_name'];
         delete obj['id'];
         return obj;

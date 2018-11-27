@@ -3,7 +3,12 @@ export interface UserAuth {
   login: string;
   password: string;
   channel?: string;
-  role?: string[];
+  roles?: string[];
   validated?: boolean;
   locked?: Date;
+}
+
+export interface UserRegistration extends UserAuth {
+  firstName: string;
+  lastName: string;
 }

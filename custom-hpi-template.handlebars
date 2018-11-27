@@ -79,26 +79,33 @@ export function RegisterRoutes(server: any) {
 
     {{#if useSecurity}}
     function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
-        return (request: any, reply: any) => {
-            let responded = 0;
+        return async (request: any, reply: any) => {
             let success = false;
+            let promises = [];
+            const succeed = function(user: any) {
+                if (!success) {
+                    success = true;
+                    request['user'] = user.splice ? user[0] : user;
+                    reply.continue();
+                }
+            };
+
+            const fail = function(error: any) {
+              if (!success) {
+                  reply(error)
+              }
+              if(error.statusCode === 500){
+                console.error("Handler fails with",error);
+              }
+            };
+            
             for (const secMethod of security) {
-                hapiAuthentication(request, secMethod.name, secMethod.scopes).then((user: any) => {
-                    // only need to respond once
-                    if (!success) {
-                        success = true;
-                        responded++;
-                        request['user'] = user;
-                        reply.continue();
-                    }
-                })
-                .catch((error: any) => {
-                    responded++;
-                    if (responded == security.length && !success) {
-                        reply(error)
-                    }
-                })
+                promises.push(hapiAuthentication(request, secMethod.name, secMethod.scopes))
             }
+
+            return Promise.all(promises)
+                  .then(succeed,fail)
+                  .catch(fail);
         }
     }
     {{/if}}

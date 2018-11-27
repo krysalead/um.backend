@@ -8,7 +8,16 @@ import './services/InvitationService';
 import './services/MailService';
 import './services/UserService';
 import './services/CalcService';
+import './services/SecurityService';
 /* Controller */
 import './controllers/FederationController';
 import './controllers/ClubController';
-import './controllers/InvitataionController';
+import './controllers/InvitationController';
+import './controllers/CalculationController';
+
+import { iocContainer } from './ioc';
+import { TYPES } from './interfaces/types';
+
+// Register the interceptors that are in the services (TODO Maybe better to extract them later)
+iocContainer.get(TYPES.ClubService);
+iocContainer.get(TYPES.FederationService);

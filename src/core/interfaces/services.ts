@@ -1,8 +1,10 @@
 import { Config } from '../../interfaces/config';
-import { UserAuth } from './UserAuth';
+import { UserAuth, UserRegistration } from './UserAuth';
 
 export interface IDatabaseService {
   init(config: Config);
+  reset(): Promise<string>;
+  injectData(file: String): Promise<string>;
 }
 
 export interface IConfigService {
@@ -25,8 +27,24 @@ export interface IAuthService {
 
 export interface IAppUserService {
   beforeLogin(userAuth: UserAuth): Promise<any>;
-  afterLogin(userAuth: UserAuth): Promise<any>;
-  beforeRegister(userAuth: UserAuth): Promise<any>;
-  afterRegister(userAuth: UserAuth): Promise<any>;
+  onLoginSuccess(userAuth: UserAuth): Promise<any>;
+  beforeRegister(userRegistration: UserRegistration): Promise<any>;
+  afterRegister(userRegistration: UserRegistration): Promise<any>;
   getTokenPayload(userAuth: UserAuth): Promise<any>;
+}
+
+export interface IInterceptorHandler {
+  handle(req: any, user: any): Promise<IServiceStatus>;
+}
+
+export interface ISwimSecurityService {
+  addRole(userId: string, role: string): Promise<any>;
+  generateToken(payload: any, userAuth: UserAuth): string;
+  verify(token: string, scopes: string[]): Promise<any>;
+  registerInterceptor(identifier: string, handler: IInterceptorHandler);
+  executeInterceptors(
+    identifier: string,
+    request: any,
+    user: any
+  ): Promise<IServiceStatus>;
 }

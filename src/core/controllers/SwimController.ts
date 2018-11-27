@@ -21,6 +21,7 @@ export class SwimController extends Controller {
    */
   protected generateServiceFailureStatus(e: any): IServiceStatus {
     this.logger.error('Failed to call service', e);
+    console.error('Caused by', e.stack);
     return {
       status: -1,
       message: 'Service call failed, contact admin'

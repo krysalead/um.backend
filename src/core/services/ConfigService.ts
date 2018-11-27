@@ -14,19 +14,19 @@ export class ConfigService implements IConfigService {
   config: Config;
   constructor() {
     console.log('ConfigService: loading ');
-    switch (process.env.ENV) {
+    let configEnv = process.env.ENV;
+    switch (configEnv) {
       case 'test':
-        console.log('----------> test');
         this.config = testConfig;
         break;
       case 'production':
-        console.log('----------> production');
         this.config = productonConfig;
         break;
       default:
-        console.log('----------> development');
+        configEnv='development';
         this.config = developmentConfig;
     }
+    console.log('----------> Config loaded: ',configEnv);
   }
   getConfig(): Config {
     return this.config;

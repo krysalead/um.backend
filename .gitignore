@@ -1,6 +1,7 @@
 /node_modules/
 /dist/
 .idea/
+.vscode/
 .DS_Store
 **/*.js
 !index.js
