@@ -1,0 +1,30 @@
+import { Visitor } from 'universal-analytics';
+import { CORE_TYPES } from '../interfaces/coreTypes';
+import { provideSingleton, inject } from '../../ioc';
+import { IAnalyticService } from '../interfaces/services';
+import { get } from '../services/CLSService';
+import { IConfigService } from '../../interfaces/services';
+
+@provideSingleton(CORE_TYPES.AnalyticService)
+class AnalyticService implements IAnalyticService {
+  constructor(
+    @inject(CORE_TYPES.ConfigService) private configService: IConfigService
+  ) {}
+
+  _getVisitor() {
+    let userId = get('userId');
+    let option;
+    if (userId) {
+      option = {
+        uid: userId
+      };
+    }
+    return new Visitor(this.configService.getConfig().analytics.id, option);
+  }
+
+  sendEvent(eventCategory: string, eventAction: string) {
+    this._getVisitor()
+      .event(eventCategory, eventAction)
+      .send();
+  }
+}
