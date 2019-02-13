@@ -48,3 +48,7 @@ export interface ISwimSecurityService {
     user: any
   ): Promise<IServiceStatus>;
 }
+
+export interface IAnalyticService {
+  sendEvent(eventCategory: string, eventAction: string);
+}

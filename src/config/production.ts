@@ -6,7 +6,7 @@ export const config: Config = {
     enabled: false
   },
   database: {
-    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/dbProd'
+    url: process.env.DATABASE_URL
   },
   server: {
     port: +process.env.PORT || 4000,
@@ -16,6 +16,9 @@ export const config: Config = {
     services: process.env.LOGGING_SERVICES || 'Info',
     controllers: process.env.LOGGING_CONTROLLERS || 'Info',
     general: process.env.LOGGING_GENERAL || 'Info'
+  },
+  analytics: {
+    id: process.env.ANLYTICS_ID
   },
   auth: {
     JWTSecret: process.env.JWT_SECRET

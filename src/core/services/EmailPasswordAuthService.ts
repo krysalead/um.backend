@@ -6,7 +6,7 @@ import {
   IAppUserService,
   ILoginServiceOutput
 } from '../interfaces/services';
-import { CORE_TYPES } from '../interfaces/coreTypes';
+import { CORE_TYPES, CORE_ERROR_CODES } from '../interfaces/coreTypes';
 import { UserAuth, UserRegistration } from '../interfaces/UserAuth';
 const password = require('password-hash-and-salt');
 import { DAODocumentUserAuth, DAOUserAuth } from '../dao/UserAuthDAO';
@@ -82,11 +82,13 @@ export class EmailPasswordAuthService implements IAuthService {
           userAuth: this.documentToUserAuthObject(userAuthDAO)
         };
       }
+    } else {
+      logger.error('User doesnot exist');
     }
     if (!valid) {
-      logger.info('Login failure: Invalid user or password');
+      logger.error('Login failure: Invalid user or password');
       status = {
-        status: -1,
+        status: CORE_ERROR_CODES.WRONG_CREDENTIAL,
         message: 'Invalid user or password'
       };
     }
@@ -137,7 +139,7 @@ export class EmailPasswordAuthService implements IAuthService {
           resolve(false);
         }
         if (!verified) {
-          logger.error('Validation failed');
+          logger.error('Password Validation failed');
         }
         resolve(verified);
       });

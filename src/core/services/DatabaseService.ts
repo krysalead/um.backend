@@ -1,14 +1,12 @@
 import * as mongoose from 'mongoose';
-import * as path from 'path';
 
-import { inject, provideSingleton } from '../../ioc';
+import { provideSingleton } from '../../ioc';
 import { syncEach, safeAccess } from '../Utils';
 import { IConfigService, IDatabaseService } from '../interfaces/services';
 import { CORE_TYPES } from '../interfaces/coreTypes';
 const password = require('password-hash-and-salt');
 import { factory } from './LoggingService';
 import { Config } from '../../interfaces/config';
-import { ConsoleLoggerImpl } from 'typescript-logging';
 
 const logger = factory.getLogger('services.DatabaseService');
 
@@ -129,7 +127,7 @@ export abstract class DatabaseService implements IDatabaseService {
     }
     if (element.toUpperCase && /^\$\{.*\}$/.test(element)) {
       newValue = this.getContextValue(element, context);
-      //We don't care about the oldvalue in this case
+      // We don't care about the oldvalue in this case
       oldValue = newValue;
     }
     return { oldValue, newValue };

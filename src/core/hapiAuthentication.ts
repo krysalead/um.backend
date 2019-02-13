@@ -2,9 +2,9 @@ import * as hapi from 'hapi';
 import * as Boom from 'boom';
 import { CORE_TYPES } from './interfaces/coreTypes';
 import { iocContainer } from '../ioc';
-
+import { set } from './services/CLSService';
 import { factory } from './services/LoggingService';
-import { ISwimSecurityService } from './interfaces/services';
+import { ISwimSecurityService, IAnalyticService } from './interfaces/services';
 const logger = factory.getLogger('service.hapiAuthentication');
 
 export function hapiAuthentication(
@@ -19,17 +19,24 @@ export function hapiAuthentication(
   const securityService: ISwimSecurityService = iocContainer.get(
     CORE_TYPES.SecurityService
   );
+  const analyticService: IAnalyticService = iocContainer.get(
+    CORE_TYPES.AnalyticService
+  );
   if (securityName === 'jwt') {
     return new Promise((resolve, reject) => {
       if (!token) {
+        analyticService.sendEvent('Authentication', 'No token provided');
         throw Boom.unauthorized('No token provided');
       } else {
         return securityService.verify(token, scopes).then(
           (user: any) => {
+            set('userId', user.id);
+            analyticService.sendEvent('Authentication', 'Success');
             logger.info('Authentication successful:' + user.id);
             resolve(user);
           },
           reason => {
+            analyticService.sendEvent('Authentication', 'Failure');
             logger.warn('Fail to autorised: ' + reason);
             reject(Boom.unauthorized(reason));
           }

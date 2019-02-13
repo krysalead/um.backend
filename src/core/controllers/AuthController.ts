@@ -1,4 +1,4 @@
-import { Route, Example, Post, Body, Path } from 'tsoa';
+import { Route, Example, Post, Body, Path, Get, Security } from 'tsoa';
 import { provide, inject } from '../../ioc';
 import {
   IAuthService,

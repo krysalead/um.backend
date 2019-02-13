@@ -3,7 +3,7 @@ import { provideSingleton, inject } from '../../ioc';
 import { CORE_TYPES } from '../interfaces/coreTypes';
 import { IConfigService } from '../../interfaces/services';
 import { UserAuth } from '../interfaces/UserAuth';
-
+import { set } from '../services/CLSService';
 import { factory } from '../services/LoggingService';
 import { DAOUserAuth } from '../dao/UserAuthDAO';
 import {
@@ -55,6 +55,7 @@ export class SwimSecurityService implements ISwimSecurityService {
   }
 
   public verify(token: string, scopes: string[]): Promise<any> {
+    logger.info('Start verify');
     return new Promise((resolve, reject) => {
       JWT.verify(token, this.configService.getConfig().auth.JWTSecret, function(
         err: any,
@@ -64,9 +65,14 @@ export class SwimSecurityService implements ISwimSecurityService {
           logger.error('Error during token verification', err);
           reject(err);
         } else {
+          logger.debug('User lookup ' + decoded.__userAuthId__);
           DAOUserAuth.findById(decoded.__userAuthId__).then(
             userDao => {
+              if (!userDao) {
+                reject('Invalid user, nothing found');
+              }
               let user = userDao.documentToObject();
+              set('authUser', user);
               // Check if JWT contains all required scopes
               for (let scope of scopes) {
                 if (user.roles && !user.roles.includes(scope)) {

@@ -7,12 +7,14 @@ import './services/ClubService';
 import './services/InvitationService';
 import './services/MailService';
 import './services/UserService';
+import './services/AppUserService';
 import './services/CalcService';
 import './services/SecurityService';
 /* Controller */
 import './controllers/FederationController';
 import './controllers/ClubController';
 import './controllers/InvitationController';
+import './controllers/UserController';
 import './controllers/CalculationController';
 
 import { iocContainer } from './ioc';
