@@ -1,62 +1,76 @@
 import * as mongoose from 'mongoose';
-import * as path from 'path';
 
 import { provideSingleton, inject } from '../../ioc';
-import { syncEach, safeAccess } from '../Utils';
 import { IConfigService, IDatabaseService } from '../interfaces/services';
 import { CORE_TYPES } from '../interfaces/coreTypes';
-const password = require('password-hash-and-salt');
 import { factory } from './LoggingService';
 import { DatabaseService } from './DatabaseService';
+import { Config } from '../../interfaces/config';
 
-const logger = factory.getLogger('services.DatabaseService');
+const logger = factory.getLogger('services.MongoDBService');
+
 let mockgoose;
 
 @provideSingleton(CORE_TYPES.DatabaseService)
 export class MongoDBService extends DatabaseService
   implements IDatabaseService {
   constructor(
-    @inject(CORE_TYPES.ConfigService) configurationService: IConfigService
+    @inject(CORE_TYPES.ConfigService)
+    configurationService: IConfigService
   ) {
     super(configurationService);
-    const configuration = configurationService.getConfig();
-    if (configuration.mockDb) {
-      let Mockgoose = require('mockgoose').Mockgoose;
-      mockgoose = new Mockgoose(mongoose);
-      mockgoose.prepareStorage().then(() => {
-        this.init(configuration);
-      });
-    } else {
-      this.init(configuration);
-    }
   }
 
   reset() {
     if (mockgoose) {
+      logger.info('Database reset');
       return mockgoose.helper.reset();
     }
     // We can't do it
-    return Promise.reject("Can't reset non-mocked database");
+    return Promise.reject('Cannot reset non-mocked database');
+  }
+  init(configuration: Config): Promise<any> {
+    if (configuration.mockDb) {
+      logger.info('Database mocked');
+      let Mockgoose = require('mockgoose').Mockgoose;
+      mockgoose = new Mockgoose(mongoose);
+      return mockgoose.prepareStorage().then(() => {
+        return this._init(configuration).then(() => {
+          logger.info('Init complete');
+        });
+      });
+    } else {
+      return this._init(configuration).then(() => {
+        logger.info('Init complete');
+      });
+    }
   }
 
-  init(configuration) {
-    mongoose.connect(
-      configuration.database.url,
-      { useMongoClient: true },
-      error => {
-        let databaseName = configuration.database.url
-          ? configuration.database.url.split('/')[3]
-          : 'Missing database';
-        if (error) {
-          logger.error(
-            `Failed to connect to database at ${databaseName}`,
-            error
-          );
-        } else {
-          logger.info(`Successfully connected to database at ${databaseName}`);
+  _init(configuration: Config) {
+    return new Promise((resolve, reject) => {
+      mongoose.set('debug', configuration.database.mongo.debug);
+      mongoose.connect(
+        configuration.database.mongo.url,
+        { useMongoClient: true },
+        error => {
+          let databaseName = configuration.database.mongo.url
+            ? configuration.database.mongo.url.split('/')[3]
+            : 'Missing database';
+          if (error) {
+            logger.error(
+              `Failed to connect to database at ${databaseName}`,
+              error
+            );
+            reject();
+          } else {
+            logger.info(
+              `Successfully connected to database at ${databaseName}`
+            );
+            resolve();
+          }
         }
-      }
-    );
+      );
+    });
   }
 
   close() {

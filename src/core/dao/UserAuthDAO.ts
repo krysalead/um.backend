@@ -1,6 +1,6 @@
-import { Schema, Document, model } from 'mongoose';
+import { Schema, Document, model } from "mongoose";
 
-import { Traceable, makeTraceable } from '../interfaces/Traceable';
+import { Traceable, makeTraceable } from "../interfaces/Traceable";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Model
@@ -15,6 +15,8 @@ export interface DAOModelUserAuth {
   roles: string[];
   validated: boolean;
   locked: Date;
+  isMigrated: boolean;
+  lastLogin: Date;
   documentToObject: Function;
 }
 
@@ -27,12 +29,14 @@ const schemaUserAuth = new Schema(
     channel: String,
     roles: [String],
     validated: Boolean,
-    locked: Date
+    locked: Date,
+    isMigrated: Boolean,
+    lastLogin: Date
   })
 );
 
 /*tslint:disable:no-invalid-this*/
-schemaUserAuth.method('documentToObject', function() {
+schemaUserAuth.method("documentToObject", function() {
   return {
     id: this._id,
     login: this.login,
@@ -40,8 +44,18 @@ schemaUserAuth.method('documentToObject', function() {
     roles: this.roles,
     channel: this.channel,
     validated: this.validated,
-    locked: this.locked
+    locked: this.locked,
+    isMigrated: this.isMigrated
   };
+});
+
+schemaUserAuth.pre("save", function(next) {
+  if (this.isNew) {
+    this.createdAt = this.updatedAt = Date.now();
+  } else {
+    this.updatedAt = Date.now();
+  }
+  next();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +69,6 @@ export interface DAODocumentUserAuth
 
 // tslint:disable-next-line:variable-name
 export const DAOUserAuth = model<DAODocumentUserAuth>(
-  'UserAuth',
+  "UserAuth",
   schemaUserAuth
 );

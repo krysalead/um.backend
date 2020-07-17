@@ -1,0 +1,54 @@
+{
+  "subject": {
+    "USER_CREATED": "Your account was created on ",
+    "CONTACT": "Koteez contact !",
+    "INVITATION_CLUB": "{organization.name} invit you to ",
+    "INVITATION_ADMIN": "An administrator invites you to join ",
+    "PASSWORD_RESET": "Your new password for"
+  },
+  "images": {
+    "USER_CREATED": "welcome",
+    "PASSWORD_RESET": "password",
+    "INVITATION_ADMIN": "",
+    "INVITATION_CLUB": "",
+    "CONTACT": ""
+  },
+  "userCreated": {
+    "hello": "Hello,",
+    "introduction": "We are pleased to welcome you!",
+    "message": "Depending on the invitation link you have recieved you will be able to join an organization or add your organization"
+  },
+  "invitationAdmin": {
+    "message": "You are invited to join the {club.name}'s calculator <b> you will be able to determine precisely in few minutes, the minimum of your membership</b> using this secured application:"
+  },
+  "invitationClub": {
+    "hello": "Dear manager,",
+    "introduction": "Enter all the fees all over the saeson and various services offred by your club, one of your main concerns will be to reach the good balance for you financial year.",
+    "message": "{organization.name} helps you <b>determine precisely and in few minutes, the minimum for your membership</b> thanks to that secured application: "
+  },
+  "passwordReset": {
+    "hello": "Hello,",
+    "introduction": "It seems you forgot your password. We generated one for you: ",
+    "message": "We recommend that you change it now, you can do it in \"My account\" top right corner of the application."
+  },
+  "global": {
+    "alt": {
+      "savemoney": "Determine tbe best amount for your membership!"
+    },
+    "message": {
+      "tagline": "Koteez, club manager calculator",
+      "item1": "Enter you fees and subsidies",
+      "item2": "Fine tune them",
+      "item3": "Determine the cost per member",
+      "buttonNotWorking": "If this button doesn't work, paste this url in your browser:"
+    },
+    "label": {
+      "needMoreInfo": "Want to know more?",
+      "contactUs": "Contact us:"
+    },
+    "button": {
+      "requestADemo": "REQUEST A DEMO!",
+      "startNow": "START NOW!"
+    }
+  }
+}

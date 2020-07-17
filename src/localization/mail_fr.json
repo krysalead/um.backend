@@ -1,0 +1,54 @@
+{
+  "subject": {
+    "USER_CREATED": "Votre compte a été créé sur ",
+    "CONTACT": "Koteez contact !",
+    "INVITATION_CLUB": "La {organization.name} vous invite à utiliser ",
+    "INVITATION_ADMIN": "Un collaborateur vous invite à rejoindre ",
+    "PASSWORD_RESET": "Votre nouveau mot de passe pour "
+  },
+  "images": {
+    "USER_CREATED": "welcome",
+    "PASSWORD_RESET": "password",
+    "INVITATION_ADMIN": "",
+    "INVITATION_CLUB": "",
+    "CONTACT": ""
+  },
+  "userCreated": {
+    "hello": "Bonjour,",
+    "introduction": "Nous sommes ravis de vous avoir parmi nous !",
+    "message": "En fonction du lien d'invitation que vous avez préalablement reçu, vous pouvez créer ou rejoindre votre organisation."
+  },
+  "invitationAdmin": {
+    "message": "Vous etes invite a rejoindre la calculatrice de {organization.name} <b>pour déterminer précisément et en quelques minutes, le seuil minimum des cotisations</b> grâce à cette application sécurisée :"
+  },
+  "invitationClub": {
+    "hello": "Cher dirigeant,",
+    "introduction": "Entre tous les frais qui s’échelonnent tout au long de la saison et les prestations différentes qu’offre votre club, l'une de vos principales préoccupations est sans aucun doute de parvenir à l'équilibre annuel des finances.",
+    "message": "La {organization.name} vous aide à <b>déterminer précisément et en quelques minutes, le seuil minimum de vos cotisations</b> grâce à cette application sécurisée : "
+  },
+  "passwordReset": {
+    "hello": "Bonjour,",
+    "introduction": "Il semblerait que vous ayez oublié votre mot de passe. Nous en avons généré un nouveau pour vous : ",
+    "message": "Nous vous recommandons de le remplacer par un mot de passe qui vous est propre, en allant dans la section \"Mon compte\" en haut à droite de l'application."
+  },
+  "global": {
+    "alt": {
+      "savemoney": "Déterminez le meilleur tarif pour vos cotisations !"
+    },
+    "message": {
+      "tagline": "Koteez, la calculatrice du dirigeant",
+      "item1": "Entrez vos frais et entrées de fonctionnement",
+      "item2": "Affinez les charges et subventions par groupe d'adhérents",
+      "item3": "Déterminez rapidement et précisément le coût réel de vos adhérents",
+      "buttonNotWorking": "Si ce bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :"
+    },
+    "label": {
+      "needMoreInfo": "Vous souhaitez en savoir plus ?",
+      "contactUs": "Pour nous contacter :"
+    },
+    "button": {
+      "requestADemo": "VOIR UNE DEMO !",
+      "startNow": "COMMENCEZ MAINTENANT !"
+    }
+  }
+}

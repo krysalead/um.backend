@@ -1,31 +1,39 @@
-import { Config } from '../interfaces/config';
+import { Config } from "../interfaces/config";
 
 export const config: Config = {
-  mockDb: true,
+  mockDb: false,
   remote: {
-    enabled: true,
-    port: 1337,
-    interface: '127.0.0.1'
+    enabled: false,
   },
   database: {
-    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/dbTest'
+    mongo: {
+      url: process.env.DATABASE_URL || "mongodb://localhost:27017/dbTest",
+      debug: false,
+    },
   },
   server: {
-    port: 4000,
-    name: 'main'
+    port: +process.env.PORT || 4000,
+    name: "main",
+    cors: process.env.CORS || "http://localhost:8888",
+    url: process.env.SERVER_URL || "http://localhost:8888",
   },
-  logging: {
-    services: process.env.LOGGING_SERVICES || 'Debug',
-    controllers: process.env.LOGGING_CONTROLLERS || 'Debug',
-    general: process.env.LOGGING_GENERAL || 'Debug'
+  metric: {
+    token: process.env.METRIC_TOKEN,
+    url: "https://eu-central-1-1.aws.cloud2.influxdata.com",
+    bucket: process.env.METRIC_BUCKET || "functional_test",
   },
   analytics: {
-    id: process.env.ANLYTICS_ID
+    id: null,
+  },
+  logging: {
+    services: process.env.LOGGING_SERVICES || "Info",
+    controllers: process.env.LOGGING_CONTROLLERS || "Info",
+    general: process.env.LOGGING_GENERAL || "Info",
   },
   auth: {
-    JWTSecret: 'test secret key'
+    JWTSecret: "test secret key",
   },
   data: {
-    file: null
-  }
+    file: null,
+  },
 };

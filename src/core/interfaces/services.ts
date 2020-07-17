@@ -1,19 +1,30 @@
-import { Config } from '../../interfaces/config';
-import { UserAuth, UserRegistration } from './UserAuth';
+import { Config } from "../../interfaces/config";
+import { UserAuth, UserRegistration } from "./UserAuth";
+import { MetricStats } from "../interfaces/Metric";
 
 export interface IDatabaseService {
-  init(config: Config);
+  init(config: Config): Promise<string>;
   reset(): Promise<string>;
+  close();
   injectData(file: String): Promise<string>;
 }
 
 export interface IConfigService {
   getConfig(): Config;
+  getUIEntrypoint(subdomain?: string): string;
 }
 
 export interface IServiceStatus {
   status: number;
   message: string;
+}
+
+export interface IMailContext {
+  template: string;
+  to: string;
+  subject: string;
+  language: string;
+  context: any;
 }
 
 export interface ILoginServiceOutput extends IServiceStatus {
@@ -23,6 +34,13 @@ export interface ILoginServiceOutput extends IServiceStatus {
 export interface IAuthService {
   login(userAuth: UserAuth): Promise<ILoginServiceOutput>;
   register(userAuth: UserAuth): Promise<IServiceStatus>;
+  changePassword(
+    user: UserAuth,
+    oldPassword: string,
+    newPassword: string,
+    isMigrated: boolean
+  ): Promise<IServiceStatus>;
+  resetPassword(login: string): Promise<IServiceStatus>;
 }
 
 export interface IAppUserService {
@@ -31,6 +49,8 @@ export interface IAppUserService {
   beforeRegister(userRegistration: UserRegistration): Promise<any>;
   afterRegister(userRegistration: UserRegistration): Promise<any>;
   getTokenPayload(userAuth: UserAuth): Promise<any>;
+  onResetPassword(newPassword: string, userAuth: UserAuth): Promise<any>;
+  getUserAuth(userId: string): Promise<UserAuth>;
 }
 
 export interface IInterceptorHandler {
@@ -51,4 +71,58 @@ export interface ISwimSecurityService {
 
 export interface IAnalyticService {
   sendEvent(eventCategory: string, eventAction: string);
+}
+export interface IMailService {
+  localizationPath: string;
+  getPartials(templateSource: string): Promise<any>;
+  sendMail(
+    email: string,
+    template: string,
+    context: any
+  ): Promise<IServiceStatus>;
+  mock();
+  getLastMail(mailTxId: string): string;
+  processMailTemplate(template: string, context: any): Promise<string>;
+}
+
+export interface IProcessHook {
+  onProcessStart(data: any, eventName: string): Promise<any>;
+}
+
+export interface IHookManagerService {
+  register(customer: string, eventName: string, hook: IProcessHook);
+  newEvent(customer: string, eventName: string, data: any): Promise<any>;
+}
+
+export interface ISQLService {
+  init();
+  getByPk(entity: any, pkName: any, pkValue: any): Promise<any>;
+}
+
+export interface IMetricService {
+  push(type: string, name: string, value: any, tag?: string, tagValue?: string);
+  flush();
+  query(
+    type: string,
+    name: string,
+    value: any,
+    rangeStart: number,
+    rangeStop: number,
+    tag?: string,
+    tagValue?: string
+  ): Promise<MetricStats[]>;
+}
+
+export class FunctionalException {
+  constructor(
+    private code: number,
+    private message: string,
+    private type: ExceptionType
+  ) {}
+}
+
+export enum ExceptionType {
+  warn = "warn",
+  error = "error",
+  fatal = "fatal",
 }

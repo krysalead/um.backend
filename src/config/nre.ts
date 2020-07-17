@@ -7,25 +7,23 @@ export const config: Config = {
   },
   database: {
     mongo: {
-      url: process.env.DATABASE_URL,
+      url: process.env.DATABASE_URL || "mongodb://localhost:27017/dbTest",
       debug: false,
     },
   },
   server: {
     port: +process.env.PORT || 4000,
-    name: process.env.NAME || "main",
-    cors: process.env.CORS || "*",
-    url: process.env.DOMAIN_URL || "http://localhost:8888",
-  },
-  metric: {
-    token: process.env.METRIC_TOKEN,
-    url:
-      process.env.METRIC_URL ||
-      "https://eu-central-1-1.aws.cloud2.influxdata.com",
-    bucket: process.env.METRIC_BUCKET || "functional",
+    name: "main",
+    cors: process.env.CORS || "http://localhost:8888",
+    url: process.env.SERVER_URL || "http://localhost:8888",
   },
   analytics: {
     id: null,
+  },
+  metric: {
+    token: process.env.METRIC_TOKEN,
+    url: "https://eu-central-1-1.aws.cloud2.influxdata.com",
+    bucket: process.env.METRIC_BUCKET || "functional_test",
   },
   logging: {
     services: process.env.LOGGING_SERVICES || "Info",
@@ -33,7 +31,7 @@ export const config: Config = {
     general: process.env.LOGGING_GENERAL || "Info",
   },
   auth: {
-    JWTSecret: process.env.JWT_SECRET,
+    JWTSecret: "test secret key",
   },
   data: {
     file: null,

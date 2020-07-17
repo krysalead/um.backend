@@ -15,14 +15,18 @@ export abstract class DatabaseService implements IDatabaseService {
   constructor(configurationService: IConfigService) {
     (<any>mongoose).Promise = Promise;
   }
-  abstract init(configuration: Config): void;
+  abstract init(configuration: Config): Promise<any>;
   abstract reset(): Promise<string>;
+  abstract close();
   async injectData(dataFile: string): Promise<any> {
     if (dataFile) {
-      logger.info('Loading data from:' + dataFile);
-      // we have a file set up
-      // Forced to deeply clone the data as require seems to have a cache
-      let data = JSON.parse(JSON.stringify(require('../../../' + dataFile)));
+      let data = dataFile;
+      if (dataFile.toUpperCase) {
+        logger.info('Loading data from:' + dataFile);
+        // we have a file set up
+        // Forced to deeply clone the data as require seems to have a cache
+        data = JSON.parse(JSON.stringify(require('../../../' + dataFile)));
+      }
       let context = {
         currentKey: '',
         documentCounter: 0
