@@ -6,3 +6,12 @@ export interface AuthResponse extends IServiceStatus {
 }
 
 export interface AuthRequest extends UserAuth {}
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+}

@@ -1,3 +1,5 @@
+import * as mongoose from "mongoose";
+
 export type ArrayAsyncMappingFunction<Item, Mapped = Item> = (
   item: Item,
   index?: number,
@@ -49,17 +51,17 @@ export function safeAccess(o, path, defaultValue) {
   if (isUndefined(o)) {
     return defaultValue;
   }
-  var arr = path.split('.');
+  var arr = path.split(".");
   for (var i = 0, j = arr, k = j.length, l = o; i < k; i++) {
     var key = j[i];
-    if (key.indexOf('[') > -1) {
+    if (key.indexOf("[") > -1) {
       var m = /(\w*)\[(\d*)\]/.exec(key);
       key = m[1];
-      var t = key !== '' ? l[key] : l;
+      var t = key !== "" ? l[key] : l;
       if (isDefined(t) && isDefined(t[m[2]])) {
         l = t[m[2]];
       } else {
-        if (typeof defaultValue === 'function') {
+        if (typeof defaultValue === "function") {
           return defaultValue();
         } else {
           return defaultValue;
@@ -69,7 +71,7 @@ export function safeAccess(o, path, defaultValue) {
       if (isDefined(l[key])) {
         l = l[key];
       } else {
-        if (typeof defaultValue === 'function') {
+        if (typeof defaultValue === "function") {
           return defaultValue();
         } else {
           return defaultValue;
@@ -95,4 +97,8 @@ export function isDefined(o) {
  */
 export function isUndefined(o) {
   return !isDefined(o);
+}
+
+export function isId(id) {
+  return mongoose.Types.ObjectId.isValid(id);
 }

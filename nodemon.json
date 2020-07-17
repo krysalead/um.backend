@@ -13,5 +13,5 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "js json html"
+  "ext": "js json"
 }

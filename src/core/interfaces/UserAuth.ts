@@ -6,6 +6,8 @@ export interface UserAuth {
   roles?: string[];
   validated?: boolean;
   locked?: Date;
+  isMigrated?: boolean;
+  updatedAt?: Date;
 }
 
 export interface UserRegistration extends UserAuth {
