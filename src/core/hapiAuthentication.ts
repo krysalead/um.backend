@@ -1,6 +1,6 @@
 import * as hapi from "hapi";
 import * as Boom from "boom";
-import { CORE_TYPES } from "./interfaces/coreTypes";
+import { CORE_TYPES } from "./constants";
 import { iocContainer } from "../ioc";
 import { set } from "./services/CLSService";
 import { factory } from "./services/LoggingService";

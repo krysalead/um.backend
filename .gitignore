@@ -5,8 +5,10 @@
 .DS_Store
 **/*.js
 !index.js
+!docker-entrypoint.js
 **/*.map
 /report/
 /db/
 src/routes.ts
 newrelic_agent.log
+npm-debug.log

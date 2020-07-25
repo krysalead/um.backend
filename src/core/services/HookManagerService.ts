@@ -1,5 +1,5 @@
 import { factory } from "../../core/services/LoggingService";
-import { CORE_TYPES } from "../../core/interfaces/coreTypes";
+import { CORE_TYPES } from "../constants";
 import { provideSingleton, inject } from "../../ioc";
 import {
   IAnalyticService,

@@ -9,7 +9,7 @@ import {
 import { factory } from "../services/LoggingService";
 import { SwimController } from "./SwimController";
 import { get } from "../services/CLSService";
-import { CORE_TYPES } from "../interfaces/coreTypes";
+import { CORE_TYPES } from "../constants";
 import {
   AuthResponse,
   AuthRequest,

@@ -26,19 +26,27 @@ mkdir -p ./data/db/
 Open 3 terminals, one for the compilation, one for the db, one for the server
 
 - npm run watch
-- mongod --dbpath ./data/db/
+  Will tranpile to Javascript
+- npm run db
+  Will start the mongo db
 - npm run dev
+  Will run you server with live reload
 
 ### Other command
 
 - "build": Full build of the application
-- "load": Perfform a load testing
+- "e2e": Run end 2 end tests
+- "test": Run unit tests
+- "qa": Run server in QA configuration
+- "nre": Run server in NRE configuration
 - "tsoa-all": Generate the swagger and the associated routes
 - "swagger": Generate the swagger only
 - "routes": Generate the routes to handle requests only
-- "start": run the build and start the app
-- "debug": Start the file change watch and wait for a debugger to connect
+- "start": start the app in production mode
+- "debug": Start the file change live reload and wait for a debugger to connect
+- "sync": Synchronize the localization which is not transpiled
 - "lint": Lint the code
+- "load": Perform a load testing
 
 ## Private project?
 
@@ -74,10 +82,11 @@ When there is an incoming request we attached an id with a unique id which will 
 
 ### Database Service
 
-So far we support only MongoDb, this service will start a connection to the database, see the DAO section to understand what you still need to do.
+This service will start a connection to the database, see the DAO section to understand what you still need to do.
 You can mock the database using mockgoose just switching mockDb to true in the configuration.
+You can also have access to a SQLLite database
 
-There is a Continus-local-storage in place in each request
+There is a Continuous-local-storage in place in each request
 
 ```
 import {set,get} from '../core/services/CLSService'
@@ -87,7 +96,7 @@ set('user',currentUser);
 let currentUser = get('user');
 ```
 
-## Config service
+### Config service
 
 Config service will give access to a JSON that hold your config, it can be find in src/config/production.ts. So how to enhance the configuration
 
@@ -103,6 +112,14 @@ ENV=test npm run dev
 ```
 
 Will start the dev environement using the test configuration
+
+### Analytics
+
+Send analytics to an analytics server (GA for instance)
+
+### Metric Service
+
+Send metrics on server (InfluxDb)
 
 ## Where to code
 
@@ -130,6 +147,8 @@ interface Ingredient{
 ### DAO
 
 This is where you will access your database. Each file should define a single document in the database
+
+#### For Mongo
 
 - first step, add the dependencies, mongoose and traceable which will add createdAt and updatedAt
 
@@ -179,6 +198,24 @@ export const DAOPizza = model<DAODocumentPizza>(
   'Pizza',
   new Schema(schemaPizza)
 );
+```
+
+#### for SQLlite
+
+```TypeScript
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+
+// Need to expose this class to be set in the repository
+@Entity('order')
+export class LeagueEntity {
+  public static entityName = 'order';
+
+  @PrimaryColumn({ name: 'pizzaName' })
+  pizzaName: string;
+
+  @Column({ name: 'customerName' })
+  customerName: string;
+}
 ```
 
 ### Interfaces
@@ -322,13 +359,13 @@ This library doesn't aim to explain how to generate a client, there is many tech
 Obviously you can write unit test and it is highly recommended. So each test will have the same name as the service/controller you want to test (It is just a convention nothing mandatory). It should contains the ~~spec~~ keyword to be run by the runner. We use mocha and chai to do unit tests, they are pre-installed once you do the npm install.
 
 ```javascript
-import { hello } from './hello-world';
-import { expect } from 'chai';
+import { hello } from "./hello-world";
+import { expect } from "chai";
 
-describe('Hello function', () => {
-  it('should return hello world', () => {
+describe("Hello function", () => {
+  it("should return hello world", () => {
     const result = hello();
-    expect(result).to.equal('Hello world!');
+    expect(result).to.equal("Hello world!");
   });
 });
 ```
@@ -466,7 +503,27 @@ Here is an example of JSON that can be injected. The top level key must be the n
 - password pipe will store the password as a password in database
 - replacement work here as well you can reference a previously inserted document like \${userAuthDAO.\_id} to get the id in database
 
-###Call for help
+# Docker
+
+Run in standalone
+
+```
+docker build -t backend .
+```
+
+Run production like
+
+```
+docker run -ti backend
+```
+
+Run dev like (live reload)
+
+```
+docker run -ti backend node docker-entrypoint.js
+```
+
+### Call for help
 
 Hey, this is already a good start but there is more to go. I need your help for few things.
 

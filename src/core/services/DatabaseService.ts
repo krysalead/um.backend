@@ -1,20 +1,20 @@
-import * as mongoose from 'mongoose';
+import { syncEach, safeAccess } from "../Utils";
+import { IConfigService, IDatabaseService } from "../interfaces/services";
+const password = require("password-hash-and-salt");
+import { factory } from "./LoggingService";
+import { Config } from "../../interfaces/config";
+import { injectable } from "inversify";
 
-import { provideSingleton } from '../../ioc';
-import { syncEach, safeAccess } from '../Utils';
-import { IConfigService, IDatabaseService } from '../interfaces/services';
-import { CORE_TYPES } from '../interfaces/coreTypes';
-const password = require('password-hash-and-salt');
-import { factory } from './LoggingService';
-import { Config } from '../../interfaces/config';
+const logger = factory.getLogger("services.DatabaseService");
 
-const logger = factory.getLogger('services.DatabaseService');
-
-@provideSingleton(CORE_TYPES.DBService)
+/**
+ * Allow to have a common interface with all the database
+ * Allows to inject data in the database bypassing the functional flow.
+ * It needs to be a singleton to be used for static injection of file
+ */
+@injectable()
 export abstract class DatabaseService implements IDatabaseService {
-  constructor(configurationService: IConfigService) {
-    (<any>mongoose).Promise = Promise;
-  }
+  constructor(configurationService: IConfigService) {}
   abstract init(configuration: Config): Promise<any>;
   abstract reset(): Promise<string>;
   abstract close();
@@ -22,19 +22,19 @@ export abstract class DatabaseService implements IDatabaseService {
     if (dataFile) {
       let data = dataFile;
       if (dataFile.toUpperCase) {
-        logger.info('Loading data from:' + dataFile);
+        logger.info("Loading data from:" + dataFile);
         // we have a file set up
         // Forced to deeply clone the data as require seems to have a cache
-        data = JSON.parse(JSON.stringify(require('../../../' + dataFile)));
+        data = JSON.parse(JSON.stringify(require("../../../" + dataFile)));
       }
       let context = {
-        currentKey: '',
-        documentCounter: 0
+        currentKey: "",
+        documentCounter: 0,
       };
       let typeCounter = 0;
-      await syncEach(Object.keys(data), async key => {
-        const coreDAOPath = '../dao/';
-        const functionalDAOPath = '../../dao/';
+      await syncEach(Object.keys(data), async (key) => {
+        const coreDAOPath = "../dao/";
+        const functionalDAOPath = "../../dao/";
         let dao;
         try {
           dao = require(coreDAOPath + key);
@@ -43,7 +43,7 @@ export abstract class DatabaseService implements IDatabaseService {
             // Maybe not a core DAO
             dao = require(functionalDAOPath + key);
           } catch (e) {
-            logger.error('Exception requiring ' + functionalDAOPath + key, e);
+            logger.error("Exception requiring " + functionalDAOPath + key, e);
           }
         }
         if (dao) {
@@ -67,9 +67,9 @@ export abstract class DatabaseService implements IDatabaseService {
       });
       logger.info(
         context.documentCounter +
-          ' document(s) inserted in ' +
+          " document(s) inserted in " +
           typeCounter +
-          ' type(s)'
+          " type(s)"
       );
       return data;
     }
@@ -78,7 +78,7 @@ export abstract class DatabaseService implements IDatabaseService {
   private async injectDocument(dao, obj, context) {
     let daoHolder = { dao: dao };
     try {
-      let daoObject = new daoHolder['dao'](obj);
+      let daoObject = new daoHolder["dao"](obj);
       let record = await daoObject.save();
       if (!context[context.currentKey]) {
         context[context.currentKey] = [];
@@ -88,9 +88,7 @@ export abstract class DatabaseService implements IDatabaseService {
       return record;
     } catch (e) {
       logger.error(
-        `Can't create object for: ${context.currentKey} definition # ${
-          context.currentIndex
-        } not proper`
+        `Can't create object for: ${context.currentKey} definition # ${context.currentIndex} not proper`
       );
       return {};
     }
@@ -99,7 +97,7 @@ export abstract class DatabaseService implements IDatabaseService {
   private async processDecorator(obj, context) {
     let processedObj = Object.assign({}, obj);
     await Promise.all(
-      Object.keys(processedObj).map(async key => {
+      Object.keys(processedObj).map(async (key) => {
         if (processedObj[key].map) {
           // Iterate over the element of the array
           processedObj[key] = await Promise.all(
@@ -125,8 +123,8 @@ export abstract class DatabaseService implements IDatabaseService {
   private async processSingleElement(element, context) {
     let newValue, oldValue;
     oldValue = newValue = element;
-    if (element.toUpperCase && element.indexOf('|password') > -1) {
-      oldValue = element.split('|')[0];
+    if (element.toUpperCase && element.indexOf("|password") > -1) {
+      oldValue = element.split("|")[0];
       newValue = await this.hashPassword(oldValue);
     }
     if (element.toUpperCase && /^\$\{.*\}$/.test(element)) {
@@ -139,12 +137,12 @@ export abstract class DatabaseService implements IDatabaseService {
 
   private getContextValue(variable, context) {
     let found = variable.match(/^\$\{(.*)\}$/);
-    return safeAccess(context, found[1], 'Not found');
+    return safeAccess(context, found[1], "Not found");
   }
 
   private async hashPassword(userPassword) {
     return new Promise((resolve, reject) => {
-      password(userPassword).hash(function(error, hash) {
+      password(userPassword).hash(function (error, hash) {
         if (error) {
           reject(null);
           logger.error(error);

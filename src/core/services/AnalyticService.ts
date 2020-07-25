@@ -1,9 +1,8 @@
 import { Visitor } from "universal-analytics";
-import { CORE_TYPES } from "../interfaces/coreTypes";
+import { CORE_TYPES } from "../constants";
 import { provideSingleton, inject } from "../../ioc";
-import { IAnalyticService } from "../interfaces/services";
+import { IAnalyticService, IConfigService } from "../interfaces/services";
 import { get } from "../services/CLSService";
-import { IConfigService } from "../../interfaces/services";
 
 @provideSingleton(CORE_TYPES.AnalyticService)
 class AnalyticService implements IAnalyticService {

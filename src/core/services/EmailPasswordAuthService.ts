@@ -6,13 +6,13 @@ import {
   IServiceStatus,
   IAppUserService,
   ILoginServiceOutput,
+  IConfigService,
 } from "../interfaces/services";
-import { CORE_TYPES, CORE_ERROR_CODES } from "../interfaces/coreTypes";
+import { CORE_TYPES, CORE_ERROR_CODES } from "../constants";
 import { UserAuth, UserRegistration } from "../interfaces/UserAuth";
 const password = require("password-hash-and-salt");
 import { DAODocumentUserAuth, DAOUserAuth } from "../dao/UserAuthDAO";
 import { factory } from "../services/LoggingService";
-import { IConfigService } from "../../interfaces/services";
 const generatePassword = require("password-generator");
 const bcrypt = require("bcrypt-nodejs");
 

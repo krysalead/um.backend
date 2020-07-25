@@ -19,7 +19,7 @@
     "routes": "tsoa routes",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "debug": "npm run watch && nodemon --watch dist --debug --debug-brk=5858 index.js",
+    "debug": "nodemon --watch dist --debug --debug-brk=5858 index.js",
     "lint": "tslint --project tsconfig.json --config tslint.json",
     "sync": "rsync src/localization/*.json dist/localization/",
     "db": "mongod --dbpath ./db --nojournal"

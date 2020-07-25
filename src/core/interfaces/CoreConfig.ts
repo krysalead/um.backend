@@ -6,14 +6,16 @@ export interface CoreConfig {
     interface?: string;
   };
   database: {
-    mongo: {
+    mongo?: {
       url: string;
       debug: boolean;
+      adapter: string;
     };
     sql?: {
       path: string;
       entities: [any];
       logging: boolean;
+      adapter: string;
     };
   };
   server: {
@@ -22,7 +24,7 @@ export interface CoreConfig {
     cors: string;
     url: string;
   };
-  analytics: {
+  analytics?: {
     id: string;
   };
   metric: {

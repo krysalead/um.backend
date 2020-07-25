@@ -1,5 +1,5 @@
 import { inject } from "inversify";
-import { CORE_TYPES } from "../interfaces/coreTypes";
+import { CORE_TYPES } from "../constants";
 import { provideSingleton } from "../../ioc";
 import { IConfigService, IMetricService } from "../interfaces/services";
 
