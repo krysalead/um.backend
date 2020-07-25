@@ -1,4 +1,5 @@
 import { Config } from "../interfaces/config";
+import { UserEntity } from "../dao/UserEntity";
 
 export const config: Config = {
   mockDb: false,
@@ -6,16 +7,18 @@ export const config: Config = {
     enabled: false,
   },
   database: {
-    mongo: {
-      url: process.env.DATABASE_URL || "mongodb://localhost:27017/dbTest",
-      debug: true,
+    sql: {
+      path: process.env.SQLLITE_PATH || "./data/user.db3",
+      entities: [UserEntity],
+      logging: true,
+      adapter: "SQLiteService",
     },
   },
   server: {
-    port: 4000,
+    port: +process.env.PORT || 4000,
     name: process.env.NAME || "main",
-    cors: "http://localhost:8888",
-    url: "http://localhost:8888",
+    cors: process.env.CORS || "http://localhost:8888",
+    url: process.env.SERVER_URL || "http://localhost:8888",
   },
   metric: {
     token:

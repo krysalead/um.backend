@@ -85,6 +85,7 @@
     "nodemon": "1.17.5",
     "nyc": "13.3.0",
     "restshooter": "1.9.1",
+    "sinon": "^9.0.2",
     "ts-node": "6.2.0",
     "tslint": "5.8.0",
     "typemoq": "2.1.0",
