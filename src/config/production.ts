@@ -1,4 +1,5 @@
 import { Config } from "../interfaces/config";
+import { UserEntity } from "../dao/UserEntity";
 
 export const config: Config = {
   mockDb: false,
@@ -6,9 +7,11 @@ export const config: Config = {
     enabled: false,
   },
   database: {
-    mongo: {
-      url: process.env.DATABASE_URL,
-      debug: false,
+    sql: {
+      path: process.env.SQLLITE_PATH || "./data/user.db3",
+      entities: [UserEntity],
+      logging: true,
+      adapter: "SQLiteService",
     },
   },
   server: {
