@@ -1,6 +1,6 @@
-import { Config } from "./config";
-import { IServiceStatus } from "../core/interfaces/services";
+import { User } from "../models/User";
 
-export interface IConfigService {
-  getConfig(): Config;
+export interface IUserService {
+  addUser(user: User): Promise<User>;
+  listUser(search?: string): Promise<User[]>;
 }
