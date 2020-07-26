@@ -47,7 +47,6 @@ describe("UserController", () => {
       UserEntity
     );
     let listUser: ListUserResponse = await underTest.listUser(null);
-    console.log(listUser);
     expect(listUser.data).to.have.lengthOf(1);
     expect(listUser.data[0].firstName).to.equals("tester");
   });
