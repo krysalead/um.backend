@@ -2,6 +2,9 @@ import { Config } from "../interfaces/config";
 import { UserEntity } from "../dao/UserEntity";
 
 export const config: Config = {
+  geoloc: {
+    apikey: "5e048d200353beabfb3038ae3c7eadfd",
+  },
   mockDb: false,
   remote: {
     enabled: false,

@@ -48,6 +48,7 @@
     "hapi-cors-headers": "git://github.com/krysalead/hapi-cors-headers.git#v1.0.3-k",
     "inversify": "4.5.2",
     "inversify-binding-decorators": "3.0.0",
+    "ipapi.co": "git://github.com/krysalead/ipapi-nodejs.git",
     "jsonwebtoken": "8.2.2",
     "mailgun-js": "^0.22.0",
     "mockgoose": "^7.3.5",
