@@ -29,7 +29,7 @@ export class SQLiteService extends DatabaseService implements ISQLService {
     throw new Error("Method not implemented.");
   }
   close() {
-    throw new Error("Method not implemented.");
+    this.connection.close();
   }
   public async init() {
     await this.getConnection();
