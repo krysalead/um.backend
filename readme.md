@@ -514,7 +514,7 @@ docker build -t backend .
 Run production like
 
 ```
-docker run -ti -v ${PWD}/src:/usr/app/src -v ${PWD}/tests:/usr/app/tests backend
+docker run -ti -v ${PWD}/src:/usr/app/src -v ${PWD}/tests:/usr/app/tests -v ${PWD}/data:/usr/app/data  backend
 ```
 
 Run dev like (live reload)

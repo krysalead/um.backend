@@ -15,7 +15,10 @@ describe("UserController", () => {
   let underTest: UserController;
   let sqlService;
   beforeEach(async () => {
-    underTest = new UserController(iocContainer.get(TYPES.UserService));
+    underTest = new UserController(
+      iocContainer.get(TYPES.UserService),
+      iocContainer.get(TYPES.GeoIpService)
+    );
     sqlService = iocContainer.get(CORE_TYPES.SQLService);
     await sqlService.init();
     await sqlService.executreRawSQL("DELETE from $table", UserEntity);
@@ -27,7 +30,11 @@ describe("UserController", () => {
       firstName: "john",
       email: email,
     };
-    let userAdded = underTest.addUser(userToBeAdded, null);
+    let userAdded = await underTest.addUser(userToBeAdded, {
+      info: {
+        remoteAddress: "127.0.0.1",
+      },
+    });
     expect(userAdded).not.equals(null);
     // Never use the other API that could have a bug in it an prefer a direct access
     let userFromDb = await sqlService.executreRawSQL(

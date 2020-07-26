@@ -38,7 +38,7 @@ export class UserController extends SwimController {
   })
   public async addUser(
     @Body() addUserRequest: AddUserRequest,
-    @Request() request: hapi.Request
+    @Request() request: any
   ): Promise<AddUserResponse> {
     logger.info("Start addUser");
     // No need of validation of the model as the TSOA framework is validating the input based on the typescript model specs

@@ -6,7 +6,6 @@ import { IConfigService, IMetricService } from "../interfaces/services";
 import {
   InfluxDB,
   Point,
-  HttpError,
   QueryApi,
   WriteApi,
   FluxTableMetaData,
@@ -15,9 +14,7 @@ import { factory } from "./LoggingService";
 import { MetricStats } from "../interfaces/Metric";
 const logger = factory.getLogger("services.MetricService");
 
-const isFloat = (possibleFloatValue) => {
-  return !isNaN(parseFloat(possibleFloatValue));
-};
+const { Kafka } = require("kafkajs");
 
 @provideSingleton(CORE_TYPES.MetricService)
 class InfluxMetricService implements IMetricService {
@@ -31,10 +28,11 @@ class InfluxMetricService implements IMetricService {
       url: configService.getConfig().metric.url,
       token: configService.getConfig().metric.token,
     });
-    this.writeApi = influxInstance.getWriteApi(
-      "8e23967877953738",
-      configService.getConfig().metric.bucket
-    );
+
+    const kafka = new Kafka({
+      clientId: "my-app",
+      brokers: ["kafka1:9092", "kafka2:9092"],
+    });
     this.queryApi = influxInstance.getQueryApi("8e23967877953738");
   }
 
@@ -44,35 +42,10 @@ class InfluxMetricService implements IMetricService {
     value: any,
     tag?: string,
     tagValue?: string
-  ) {
-    const dataPoint = new Point(type);
-    if (tag != undefined && tagValue != undefined) {
-      dataPoint.tag(tag, tagValue);
-    }
-    if (name != undefined && value != undefined && isFloat(value)) {
-      dataPoint.floatField(name, value);
-    } else {
-      dataPoint.stringField(name, value);
-    }
-
-    this.writeApi.writePoint(dataPoint);
-    logger.debug(`Sent point: ${dataPoint}`);
-    this.counter++;
-    if (this.counter > 10) {
-      this.counter = 0;
-      this.writeApi.flush();
-    }
-  }
+  ) {}
 
   public flush() {
-    return this.writeApi
-      .close()
-      .then(() => {
-        logger.info("Closing Influx DB");
-      })
-      .catch((e) => {
-        logger.error("failure to close influx db", e);
-      });
+    return Promise.resolve();
   }
 
   public query(
