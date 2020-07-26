@@ -17,8 +17,8 @@ export const config: Config = {
   server: {
     port: +process.env.PORT || 4000,
     name: process.env.NAME || "main",
-    cors: process.env.CORS || "*",
-    url: process.env.DOMAIN_URL || "http://localhost:8888",
+    cors: process.env.CORS || "http://localhost:3000",
+    url: process.env.SERVER_URL || "http://localhost:3000",
   },
   metric: {
     token: process.env.METRIC_TOKEN,
