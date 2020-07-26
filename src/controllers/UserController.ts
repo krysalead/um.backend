@@ -49,10 +49,11 @@ export class UserController extends SwimController {
       logger.error("Failed to add a user", e);
       status = this.generateServiceFailureStatus(e);
     }
+    logger.info("End addUser");
     return { ...status, data: user };
   }
 
-  @Get("{searchFilter}")
+  @Get("search/{searchFilter}")
   @Example<ListUserResponse>({
     status: 0,
     message: "",
@@ -65,18 +66,45 @@ export class UserController extends SwimController {
       },
     ],
   })
-  public async listUser(
+  public async searchUser(
     @Path("searchFilter") searchFilter: string
   ): Promise<ListUserResponse> {
-    logger.info("Start listUser");
+    logger.info("Start searchUser");
     let status: IServiceStatus = { status: 0, message: "" };
     let user: User[];
     try {
       user = await this.userService.listUser(searchFilter);
     } catch (e) {
-      logger.error("Failed to add a user", e);
+      logger.error("Failed to search for users", e);
       status = this.generateServiceFailureStatus(e);
     }
+    logger.info("End searchUser");
+    return { ...status, data: user };
+  }
+  @Get()
+  @Example<ListUserResponse>({
+    status: 0,
+    message: "",
+    data: [
+      {
+        id: 1,
+        lastName: "john",
+        firstName: "Doe",
+        email: "jdoe@yahoo.fr",
+      },
+    ],
+  })
+  public async listUser(): Promise<ListUserResponse> {
+    logger.info("Start listUser");
+    let status: IServiceStatus = { status: 0, message: "" };
+    let user: User[];
+    try {
+      user = await this.userService.listUser();
+    } catch (e) {
+      logger.error("Failed to list user", e);
+      status = this.generateServiceFailureStatus(e);
+    }
+    logger.info("End listUser");
     return { ...status, data: user };
   }
 }

@@ -514,16 +514,26 @@ docker build -t backend .
 Run production like
 
 ```
-docker run -ti backend
+docker run -ti -v ${PWD}/src:/usr/app/src -v ${PWD}/tests:/usr/app/tests backend
 ```
 
 Run dev like (live reload)
 
 ```
-docker run -ti backend node docker-entrypoint.js
+docker run -ti -v ${PWD}/src:/usr/app/src -v ${PWD}/tests:/usr/app/tests -v ${PWD}/data:/usr/app/data backend node docker-entrypoint.js
 ```
 
-### Call for help
+## Utils
+
+Searching for a process listening on a port
+
+On macos
+
+```
+netstat -ntl | grep 4000
+```
+
+# Call for help
 
 Hey, this is already a good start but there is more to go. I need your help for few things.
 

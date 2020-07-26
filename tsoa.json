@@ -1,6 +1,6 @@
 {
   "swagger": {
-    "outputDirectory": "./dist",
+    "outputDirectory": "../frontend/src/",
     "entryFile": "./src/hapi-server.ts",
     "host": "localhost:4000",
     "basePath": "/v1",
@@ -9,9 +9,7 @@
         "type": "apiKey",
         "name": "jwt_token",
         "in": "header",
-        "scopes": {
-
-        }
+        "scopes": {}
       }
     }
   },

@@ -125,10 +125,15 @@ const init = async () => {
 
 const stop = async () => {
   logger.info("Shutting down server");
-  const database: IDatabaseService = iocContainer.get(
-    CORE_TYPES.MongoDBService
+  let config: IConfigService = iocContainer.get(CORE_TYPES.ConfigService);
+  await Promise.all(
+    Object.keys(config.getConfig().database).map(async (dbType) => {
+      const database: IDatabaseService = iocContainer.get(
+        config.getConfig().database[dbType].adapter
+      );
+      await database.close();
+    })
   );
-  await database.close();
   let metric: IMetricService = iocContainer.get(CORE_TYPES.MetricService);
   await metric.flush();
   server.stop({ timeout: 10000 }).then(function (err) {

@@ -37,7 +37,7 @@ describe("UserController", () => {
     expect(userFromDb).to.have.lengthOf(1);
   });
   it("lists users when no user", async () => {
-    let listUser: ListUserResponse = await underTest.listUser(null);
+    let listUser: ListUserResponse = await underTest.listUser();
     expect(listUser).not.equals(null);
     expect(listUser.data).to.have.lengthOf(0);
   });
@@ -46,8 +46,7 @@ describe("UserController", () => {
       'INSERT INTO "$table" ("lastName", "firstName", "email") VALUES ("test", "tester", "tester@test.com")',
       UserEntity
     );
-    let listUser: ListUserResponse = await underTest.listUser(null);
-    console.log(listUser);
+    let listUser: ListUserResponse = await underTest.listUser();
     expect(listUser.data).to.have.lengthOf(1);
     expect(listUser.data[0].firstName).to.equals("tester");
   });
@@ -70,7 +69,7 @@ describe("UserController", () => {
       `INSERT INTO "$table" ( "firstName","lastName", "email") VALUES ("Jamie", "${lookUpName}", "jamie@john.com")`,
       UserEntity
     );
-    let listUser: ListUserResponse = await underTest.listUser(lookUpName);
+    let listUser: ListUserResponse = await underTest.searchUser(lookUpName);
     expect(listUser.data).to.have.lengthOf(3);
   });
   it("searches users by email in list", async () => {
@@ -83,7 +82,7 @@ describe("UserController", () => {
       `INSERT INTO "$table" ("lastName", "firstName", "email") VALUES ("john", "DOE", "${lookUpEmail}")`,
       UserEntity
     );
-    let listUser: ListUserResponse = await underTest.listUser(lookUpEmail);
+    let listUser: ListUserResponse = await underTest.searchUser(lookUpEmail);
     expect(listUser.data).to.have.lengthOf(1);
   });
 });
