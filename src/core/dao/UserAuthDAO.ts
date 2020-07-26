@@ -31,12 +31,12 @@ const schemaUserAuth = new Schema(
     validated: Boolean,
     locked: Date,
     isMigrated: Boolean,
-    lastLogin: Date
+    lastLogin: Date,
   })
 );
 
 /*tslint:disable:no-invalid-this*/
-schemaUserAuth.method("documentToObject", function() {
+schemaUserAuth.method("documentToObject", function () {
   return {
     id: this._id,
     login: this.login,
@@ -45,11 +45,11 @@ schemaUserAuth.method("documentToObject", function() {
     channel: this.channel,
     validated: this.validated,
     locked: this.locked,
-    isMigrated: this.isMigrated
+    isMigrated: this.isMigrated,
   };
 });
 
-schemaUserAuth.pre("save", function(next) {
+schemaUserAuth.pre("save", function (next) {
   if (this.isNew) {
     this.createdAt = this.updatedAt = Date.now();
   } else {
