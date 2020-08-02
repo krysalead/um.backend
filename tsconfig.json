@@ -10,7 +10,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6",
+    "noEmit": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
