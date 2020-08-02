@@ -34,8 +34,6 @@ export const CORE_STORAGE = {
 export const METRICS = {
   STARTUP: "STARTUP",
   REQUEST: "REQUEST",
-  CALC_LOADED: "CALC_LOADED",
-  CALC_SAVED: "CALC_SAVED",
 };
 
 export const REGEXP = {

@@ -108,7 +108,7 @@ export interface ISQLService {
 
 export interface IMetricService {
   push(type: string, name: string, value: any, tag?: string, tagValue?: string);
-  flush();
+  close();
   query(
     type: string,
     name: string,

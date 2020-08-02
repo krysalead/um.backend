@@ -23,18 +23,14 @@ export const config: Config = {
     cors: process.env.CORS || "http://localhost:3000",
     url: process.env.SERVER_URL || "http://localhost:3000",
   },
-  metric: {
-    token: process.env.METRIC_TOKEN,
-    url: "https://eu-central-1-1.aws.cloud2.influxdata.com",
-    bucket: process.env.METRIC_BUCKET || "functional_test",
-  },
+  metric: {},
   analytics: {
     id: null,
   },
   logging: {
-    services: process.env.LOGGING_SERVICES || "Error",
-    controllers: process.env.LOGGING_CONTROLLERS || "Info",
-    general: process.env.LOGGING_GENERAL || "Info",
+    services: process.env.LOGGING_SERVICES || "Debug",
+    controllers: process.env.LOGGING_CONTROLLERS || "Debug",
+    general: process.env.LOGGING_GENERAL || "Debug",
   },
   auth: {
     JWTSecret: "test secret key",

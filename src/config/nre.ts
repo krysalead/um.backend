@@ -27,9 +27,11 @@ export const config: Config = {
     id: null,
   },
   metric: {
-    token: process.env.METRIC_TOKEN,
-    url: "https://eu-central-1-1.aws.cloud2.influxdata.com",
-    bucket: process.env.METRIC_BUCKET || "functional_test",
+    kafka: {
+      brokers: process.env.BROKERS || "kafka:9092",
+      topic: process.env.TOPIC || "metric-topic",
+      clientId: "um-app",
+    },
   },
   logging: {
     services: process.env.LOGGING_SERVICES || "Info",

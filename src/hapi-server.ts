@@ -135,7 +135,7 @@ const stop = async () => {
     })
   );
   let metric: IMetricService = iocContainer.get(CORE_TYPES.MetricService);
-  await metric.flush();
+  await metric.close();
   server.stop({ timeout: 10000 }).then(function (err) {
     logger.info("hapi server stopped");
     process.exit(err ? 1 : 0);

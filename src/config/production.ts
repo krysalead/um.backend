@@ -24,11 +24,11 @@ export const config: Config = {
     url: process.env.SERVER_URL || "http://localhost:3000",
   },
   metric: {
-    token: process.env.METRIC_TOKEN,
-    url:
-      process.env.METRIC_URL ||
-      "https://eu-central-1-1.aws.cloud2.influxdata.com",
-    bucket: process.env.METRIC_BUCKET || "functional",
+    kafka: {
+      brokers: process.env.BROKERS || "kafka:9092",
+      topic: process.env.TOPIC || "metric-topic",
+      clientId: "um-app",
+    },
   },
   analytics: {
     id: null,

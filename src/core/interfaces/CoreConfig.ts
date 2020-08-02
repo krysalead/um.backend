@@ -28,9 +28,17 @@ export interface CoreConfig {
     id: string;
   };
   metric: {
-    token: string;
-    url: string;
-    bucket: string;
+    kafka?: {
+      brokers: string;
+      topic: string;
+      clientId: string;
+    };
+    influx?: {
+      token: string;
+      url: string;
+      bucket: string;
+      organization: string;
+    };
   };
   logging: {
     services: string;
