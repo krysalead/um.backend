@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npm run tsoa-all; npm run tsc;npm run sync",
     "tsc": "tsc --sourceMap false",
+    "postinstall": "npm run build",
     "watch": "tsc -w",
     "load": "artillery run e2e/loadtest.yml -o dist/loadtest.result -q",
     "e2e": " mocha -r ts-node/register e2e/**/*Test.ts --exit",
