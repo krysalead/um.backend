@@ -80,7 +80,7 @@
     "@types/uuid": "3.4.3",
     "artillery": "^1.6.0-29",
     "chai": "4.1.2",
-    "http-proxy": "1.17.0",
+    "http-proxy": "1.18.1",
     "merge-json": "0.1.0-b.3",
     "mocha": "5.2.0",
     "mock-fs": "^4.10.1",
