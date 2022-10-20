@@ -55,7 +55,7 @@
     "mailgun-js": "^0.22.0",
     "mockgoose": "^7.3.5",
     "moment": "^2.22.2",
-    "mongoose": "4.13.7",
+    "mongoose": "4.13.21",
     "mustache": "3.0.1",
     "newrelic": "^5.6.1",
     "password-generator": "^2.2.0",
